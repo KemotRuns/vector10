@@ -63,6 +63,11 @@
 			<h1>Global Textile Trade Flows</h1>
 			<p class="subtitle">
 				HS Codes 50–63 | UN Comtrade Data | {year}
+				{#if data.dataSource === 'demo'}
+					<span class="data-badge demo">Demo Data</span>
+				{:else}
+					<span class="data-badge live">Live Data</span>
+				{/if}
 			</p>
 		</div>
 	</header>
@@ -201,6 +206,28 @@
 		color: var(--text-tertiary);
 		margin-top: var(--space-1);
 		font-family: var(--font-mono);
+		display: flex;
+		align-items: center;
+		gap: var(--space-2);
+	}
+
+	.data-badge {
+		font-size: var(--text-xs);
+		font-family: var(--font-body);
+		padding: 1px 8px;
+		border-radius: var(--radius-full);
+		font-weight: 600;
+		letter-spacing: 0;
+	}
+
+	.data-badge.live {
+		background: var(--accent-success);
+		color: #16121d;
+	}
+
+	.data-badge.demo {
+		background: var(--accent-warning);
+		color: #16121d;
 	}
 
 	.stats-bar {
