@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import type { EChartsOption, ECharts } from 'echarts';
-	import { themeStore } from '$lib/stores/theme';
+	import type { EChartsOption } from 'echarts';
+	import { isDark } from '$lib/stores/theme';
+	import { get } from 'svelte/store';
 
 	interface Props {
 		options: EChartsOption;
@@ -12,7 +13,7 @@
 	let { options, height = '400px', class: className = '' }: Props = $props();
 
 	let container: HTMLDivElement;
-	let chart: ECharts | null = null;
+	let chart: any = null;
 
 	async function initChart() {
 		const echarts = await import('echarts/core');
@@ -21,7 +22,7 @@
 
 		echarts.use([CanvasRenderer, TooltipComponent, LegendComponent, GridComponent]);
 
-		chart = echarts.init(container, themeStore.isDark ? 'dark' : undefined, {
+		chart = echarts.init(container, get(isDark) ? 'dark' : undefined, {
 			renderer: 'canvas'
 		});
 

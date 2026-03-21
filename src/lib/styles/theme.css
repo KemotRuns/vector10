@@ -1,4 +1,4 @@
-/* Vector10 Design System */
+/* Vector10 Design System — Brand-aligned */
 
 /* ─── Fonts ─── */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -52,85 +52,101 @@
 	--sidebar-width: 280px;
 	--content-max-width: 1440px;
 
-	/* ─── HS Chapter Colors (Textile Categories) ─── */
-	--hs-50-silk: #d4a853;
-	--hs-51-wool: #c9b18c;
-	--hs-52-cotton: #f5f0e8;
-	--hs-53-vegetable: #7ba05b;
-	--hs-54-filaments: #5b8dd9;
-	--hs-55-staple: #7c6bc4;
-	--hs-56-nonwovens: #a0a0a0;
-	--hs-57-carpets: #c44e52;
-	--hs-58-special: #e8956a;
-	--hs-59-coated: #4a9b8f;
-	--hs-60-knitted: #d97ab5;
-	--hs-61-knit-apparel: #e84393;
-	--hs-62-woven-apparel: #6c5ce7;
-	--hs-63-other: #636e72;
+	/* ─── V10 Brand Colors ─── */
+	--v10-navy: #1e3a5c;
+	--v10-navy-deep: #16121d;
+	--v10-navy-mid: #243b55;
+	--v10-orange: #F5A623;
+	--v10-coral: #db5111;
+	--v10-teal: #487F84;
+	--v10-teal-dark: #003a40;
+	--v10-purple: #5F597E;
+
+	/* ─── HS Chapter Colors (Textile Categories — V10 palette) ─── */
+	--hs-50-silk: #F5A623;
+	--hs-51-wool: #c9a96e;
+	--hs-52-cotton: #e8d5a8;
+	--hs-53-vegetable: #5a9e6f;
+	--hs-54-filaments: #487F84;
+	--hs-55-staple: #5F597E;
+	--hs-56-nonwovens: #8899a6;
+	--hs-57-carpets: #db5111;
+	--hs-58-special: #e0874a;
+	--hs-59-coated: #3a7d75;
+	--hs-60-knitted: #c47a9b;
+	--hs-61-knit-apparel: #d65d7a;
+	--hs-62-woven-apparel: #6e6aaa;
+	--hs-63-other: #6b7d8d;
 }
 
 /* ─── Light Theme (Default) ─── */
 :root, [data-theme='light'] {
 	--bg-primary: #ffffff;
-	--bg-secondary: #f8f9fa;
-	--bg-tertiary: #f0f1f3;
+	--bg-secondary: #f5f7fa;
+	--bg-tertiary: #eef1f6;
 	--bg-card: #ffffff;
 	--bg-elevated: #ffffff;
-	--bg-overlay: rgba(0, 0, 0, 0.4);
+	--bg-overlay: rgba(22, 18, 29, 0.4);
 
-	--text-primary: #1a1a2e;
-	--text-secondary: #4a4a68;
-	--text-tertiary: #8888a0;
+	--text-primary: #16121d;
+	--text-secondary: #4a5568;
+	--text-tertiary: #8898a6;
 	--text-inverse: #ffffff;
 
-	--border-default: #e2e4e8;
-	--border-subtle: #f0f1f3;
-	--border-strong: #c8cad0;
+	--border-default: #e2e6ec;
+	--border-subtle: #eef1f6;
+	--border-strong: #c8cdd6;
 
-	--accent-primary: #2563eb;
-	--accent-primary-hover: #1d4ed8;
-	--accent-secondary: #7c3aed;
-	--accent-success: #10b981;
-	--accent-warning: #f59e0b;
-	--accent-danger: #ef4444;
+	--accent-primary: #1e3a5c;
+	--accent-primary-hover: #2a4f7a;
+	--accent-secondary: #F5A623;
+	--accent-success: #6ECA09;
+	--accent-warning: #F5A623;
+	--accent-danger: #D0021B;
 
 	--chart-bg: #ffffff;
-	--chart-grid: #f0f1f3;
-	--chart-axis: #8888a0;
-	--chart-tooltip-bg: #1a1a2e;
+	--chart-grid: #eef1f6;
+	--chart-axis: #8898a6;
+	--chart-tooltip-bg: #16121d;
 	--chart-tooltip-text: #ffffff;
+
+	/* Logo is white SVG — invert to dark in light mode */
+	--logo-filter: brightness(0) saturate(100%) invert(15%) sepia(20%) saturate(600%) hue-rotate(180deg);
 }
 
 /* ─── Dark Theme ─── */
 [data-theme='dark'] {
-	--bg-primary: #0f0f1a;
-	--bg-secondary: #16162a;
-	--bg-tertiary: #1e1e36;
-	--bg-card: #1a1a30;
-	--bg-elevated: #222240;
+	--bg-primary: #0d1b2a;
+	--bg-secondary: #132338;
+	--bg-tertiary: #1a2d45;
+	--bg-card: #132338;
+	--bg-elevated: #1e3652;
 	--bg-overlay: rgba(0, 0, 0, 0.6);
 
-	--text-primary: #e8e8f0;
-	--text-secondary: #a8a8c0;
-	--text-tertiary: #6868880;
-	--text-inverse: #1a1a2e;
+	--text-primary: #e8ecf0;
+	--text-secondary: #a0b0c0;
+	--text-tertiary: #687a8e;
+	--text-inverse: #16121d;
 
-	--border-default: #2a2a44;
-	--border-subtle: #1e1e36;
-	--border-strong: #3a3a58;
+	--border-default: #1e3652;
+	--border-subtle: #1a2d45;
+	--border-strong: #2a4a6a;
 
-	--accent-primary: #3b82f6;
-	--accent-primary-hover: #60a5fa;
-	--accent-secondary: #8b5cf6;
-	--accent-success: #34d399;
-	--accent-warning: #fbbf24;
+	--accent-primary: #F5A623;
+	--accent-primary-hover: #f7b84a;
+	--accent-secondary: #487F84;
+	--accent-success: #6ECA09;
+	--accent-warning: #F5A623;
 	--accent-danger: #f87171;
 
-	--chart-bg: #1a1a30;
-	--chart-grid: #2a2a44;
-	--chart-axis: #6868880;
-	--chart-tooltip-bg: #e8e8f0;
-	--chart-tooltip-text: #1a1a2e;
+	--chart-bg: #132338;
+	--chart-grid: #1e3652;
+	--chart-axis: #687a8e;
+	--chart-tooltip-bg: #e8ecf0;
+	--chart-tooltip-text: #0d1b2a;
+
+	/* Logo is white SVG — show as-is on dark backgrounds */
+	--logo-filter: none;
 
 	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
 	--shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { themeStore } from '$lib/stores/theme';
+	import { isDark } from '$lib/stores/theme';
+	import { get } from 'svelte/store';
 	import type { ArcFlow } from '$lib/types/trade';
 	import { HS_CHAPTER_LABELS, type HSChapter } from '$lib/types/trade';
-	import { formatTradeValue } from '$lib/data/transforms';
 
 	interface Props {
 		arcs: ArcFlow[];
@@ -18,20 +18,20 @@
 	let deckOverlay: any = null;
 
 	const CHAPTER_COLORS: Record<string, [number, number, number]> = {
-		'50': [212, 168, 83],   // Silk — gold
-		'51': [201, 177, 140],  // Wool — tan
-		'52': [245, 230, 200],  // Cotton — cream
-		'53': [123, 160, 91],   // Vegetable — green
-		'54': [91, 141, 217],   // Filaments — blue
-		'55': [124, 107, 196],  // Staple — purple
-		'56': [160, 160, 160],  // Nonwovens — gray
-		'57': [196, 78, 82],    // Carpets — red
-		'58': [232, 149, 106],  // Special — peach
-		'59': [74, 155, 143],   // Coated — teal
-		'60': [217, 122, 181],  // Knitted — pink
-		'61': [232, 67, 147],   // Knit Apparel — hot pink
-		'62': [108, 92, 231],   // Woven Apparel — indigo
-		'63': [99, 110, 114]    // Other — slate
+		'50': [245, 166, 35],   // Silk — V10 gold
+		'51': [201, 169, 110],  // Wool — warm tan
+		'52': [232, 213, 168],  // Cotton — cream
+		'53': [90, 158, 111],   // Vegetable — green
+		'54': [72, 127, 132],   // Filaments — V10 teal
+		'55': [95, 89, 126],    // Staple — V10 purple
+		'56': [136, 153, 166],  // Nonwovens — slate
+		'57': [219, 81, 17],    // Carpets — V10 coral
+		'58': [224, 135, 74],   // Special — amber
+		'59': [58, 125, 117],   // Coated — dark teal
+		'60': [196, 122, 155],  // Knitted — muted rose
+		'61': [214, 93, 122],   // Knit Apparel — rose
+		'62': [110, 106, 170],  // Woven Apparel — soft indigo
+		'63': [107, 125, 141]   // Other — blue-gray
 	};
 
 	function getArcColor(hsChapter: string): [number, number, number, number] {
@@ -57,12 +57,13 @@
 		const darkStyle = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 		const lightStyle = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
 
+		// @ts-expect-error — MapLibre 5 supports 'projection' but types lag behind
 		map = new maplibregl.Map({
 			container,
-			style: themeStore.isDark ? darkStyle : lightStyle,
+			style: get(isDark) ? darkStyle : lightStyle,
 			center: [30, 20],
 			zoom: 1.5,
-			projection: 'globe' as any,
+			projection: 'globe',
 			antialias: true
 		});
 

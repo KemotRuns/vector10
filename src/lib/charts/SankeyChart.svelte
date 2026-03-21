@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import type { ECharts } from 'echarts';
-	import { themeStore } from '$lib/stores/theme';
+	import { isDark } from '$lib/stores/theme';
+	import { get } from 'svelte/store';
 	import type { TradeFlow } from '$lib/types/trade';
 	import { HS_CHAPTER_LABELS, type HSChapter } from '$lib/types/trade';
 	import { formatTradeValue } from '$lib/data/transforms';
@@ -110,7 +111,7 @@
 
 		echarts.use([CanvasRenderer, TooltipComponent, SankeyChart]);
 
-		chart = echarts.init(container, themeStore.isDark ? 'dark' : undefined);
+		chart = echarts.init(container, get(isDark) ? 'dark' : undefined);
 		updateChart();
 	}
 
@@ -137,7 +138,7 @@
 				nodeWidth: 20,
 				lineStyle: { color: 'gradient', curveness: 0.5, opacity: 0.4 },
 				itemStyle: { borderWidth: 1, borderColor: 'rgba(0,0,0,0.1)' },
-				label: { fontSize: 11, color: themeStore.isDark ? '#e8e8f0' : '#1a1a2e' },
+				label: { fontSize: 11, color: get(isDark) ? '#e8ecf0' : '#16121d' },
 				data: nodes,
 				links
 			}]

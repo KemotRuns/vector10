@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { themeStore } from '$lib/stores/theme';
+	import { isDark, toggleTheme } from '$lib/stores/theme';
+	import v10Logo from '$lib/assets/v10-logo.svg';
 
 	const navItems = [
 		{ href: '/', label: 'Overview' },
@@ -11,8 +12,7 @@
 <nav class="nav">
 	<div class="nav-inner">
 		<a href="/" class="logo">
-			<span class="logo-mark">V10</span>
-			<span class="logo-text">Vector10</span>
+			<img src={v10Logo} alt="V10" class="logo-img" />
 		</a>
 
 		<div class="nav-links">
@@ -27,8 +27,8 @@
 			{/each}
 		</div>
 
-		<button class="theme-toggle" onclick={themeStore.toggle} aria-label="Toggle theme">
-			{#if themeStore.isDark}
+		<button class="theme-toggle" onclick={toggleTheme} aria-label="Toggle theme">
+			{#if $isDark}
 				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 					<circle cx="12" cy="12" r="5"/>
 					<line x1="12" y1="1" x2="12" y2="3"/>
@@ -74,26 +74,13 @@
 	.logo {
 		display: flex;
 		align-items: center;
-		gap: var(--space-2);
 		text-decoration: none;
-		color: var(--text-primary);
-		font-weight: 600;
 	}
 
-	.logo-mark {
-		background: var(--accent-primary);
-		color: white;
-		font-size: var(--text-xs);
-		font-weight: 700;
-		padding: 2px 6px;
-		border-radius: var(--radius-sm);
-		letter-spacing: 0.05em;
-		font-family: var(--font-mono);
-	}
-
-	.logo-text {
-		font-size: var(--text-lg);
-		letter-spacing: -0.02em;
+	.logo-img {
+		height: 20px;
+		width: auto;
+		filter: var(--logo-filter, none);
 	}
 
 	.nav-links {

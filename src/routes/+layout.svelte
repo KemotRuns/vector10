@@ -1,14 +1,14 @@
 <script lang="ts">
 	import '$lib/styles/theme.css';
 	import Nav from '$lib/components/Nav.svelte';
-	import { themeStore } from '$lib/stores/theme';
+	import { applyTheme } from '$lib/stores/theme';
 	import { onMount } from 'svelte';
 	import favicon from '$lib/assets/favicon.svg';
 
 	let { children } = $props();
 
 	onMount(() => {
-		themeStore.apply();
+		applyTheme();
 	});
 </script>
 

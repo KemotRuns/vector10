@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import type { ECharts } from 'echarts';
-	import { themeStore } from '$lib/stores/theme';
+	import { isDark } from '$lib/stores/theme';
+	import { get } from 'svelte/store';
 	import type { TradeFlow } from '$lib/types/trade';
 	import { HS_CHAPTER_LABELS, type HSChapter } from '$lib/types/trade';
 	import { formatTradeValue } from '$lib/data/transforms';
@@ -17,11 +17,11 @@
 	let { flowsByYear, chapters, height = '380px' }: Props = $props();
 
 	let container: HTMLDivElement;
-	let chart: ECharts | null = null;
+	let chart: any = null;
 
 	const SERIES_COLORS: string[] = [
-		'#2563eb', '#e84393', '#7c6bc4', '#10b981', '#f59e0b',
-		'#c44e52', '#5b8dd9', '#d4a853', '#4a9b8f', '#636e72'
+		'#1e3a5c', '#db5111', '#487F84', '#F5A623', '#5F597E',
+		'#d65d7a', '#5a9e6f', '#6e6aaa', '#3a7d75', '#6b7d8d'
 	];
 
 	function buildTimeSeriesData() {
@@ -75,7 +75,7 @@
 
 		echarts.use([CanvasRenderer, TooltipComponent, LegendComponent, GridComponent, LineChart]);
 
-		chart = echarts.init(container, themeStore.isDark ? 'dark' : undefined);
+		chart = echarts.init(container, get(isDark) ? 'dark' : undefined);
 		updateChart();
 	}
 
@@ -96,7 +96,7 @@
 			},
 			legend: {
 				bottom: 0,
-				textStyle: { color: themeStore.isDark ? '#a8a8c0' : '#4a4a68', fontSize: 11 }
+				textStyle: { color: get(isDark) ? '#a8a8c0' : '#4a4a68', fontSize: 11 }
 			},
 			grid: {
 				left: 70,
@@ -107,16 +107,16 @@
 			xAxis: {
 				type: 'category',
 				data: years.map(String),
-				axisLine: { lineStyle: { color: themeStore.isDark ? '#2a2a44' : '#e2e4e8' } },
-				axisLabel: { color: themeStore.isDark ? '#a8a8c0' : '#4a4a68' }
+				axisLine: { lineStyle: { color: get(isDark) ? '#2a2a44' : '#e2e4e8' } },
+				axisLabel: { color: get(isDark) ? '#a8a8c0' : '#4a4a68' }
 			},
 			yAxis: {
 				type: 'value',
 				axisLabel: {
-					color: themeStore.isDark ? '#a8a8c0' : '#4a4a68',
+					color: get(isDark) ? '#a8a8c0' : '#4a4a68',
 					formatter: (v: number) => formatTradeValue(v)
 				},
-				splitLine: { lineStyle: { color: themeStore.isDark ? '#2a2a44' : '#f0f1f3' } }
+				splitLine: { lineStyle: { color: get(isDark) ? '#2a2a44' : '#f0f1f3' } }
 			},
 			series
 		}, { notMerge: true });

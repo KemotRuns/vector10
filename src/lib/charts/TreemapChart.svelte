@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import type { ECharts } from 'echarts';
-	import { themeStore } from '$lib/stores/theme';
+	import { isDark } from '$lib/stores/theme';
+	import { get } from 'svelte/store';
 	import type { TradeFlow, TradeDirection } from '$lib/types/trade';
 	import { HS_CHAPTER_LABELS, type HSChapter } from '$lib/types/trade';
 	import { formatTradeValue } from '$lib/data/transforms';
@@ -16,13 +16,13 @@
 	let { flows, direction, height = '450px' }: Props = $props();
 
 	let container: HTMLDivElement;
-	let chart: ECharts | null = null;
+	let chart: any = null;
 
 	const CHAPTER_COLORS: Record<string, string> = {
-		'50': '#d4a853', '51': '#c9b18c', '52': '#f5e6c8', '53': '#7ba05b',
-		'54': '#5b8dd9', '55': '#7c6bc4', '56': '#a0a0a0', '57': '#c44e52',
-		'58': '#e8956a', '59': '#4a9b8f', '60': '#d97ab5', '61': '#e84393',
-		'62': '#6c5ce7', '63': '#636e72'
+		'50': '#F5A623', '51': '#c9a96e', '52': '#e8d5a8', '53': '#5a9e6f',
+		'54': '#487F84', '55': '#5F597E', '56': '#8899a6', '57': '#db5111',
+		'58': '#e0874a', '59': '#3a7d75', '60': '#c47a9b', '61': '#d65d7a',
+		'62': '#6e6aaa', '63': '#6b7d8d'
 	};
 
 	function buildTreemapData(flows: TradeFlow[]) {
@@ -59,7 +59,7 @@
 
 		echarts.use([CanvasRenderer, TooltipComponent, TreemapChart]);
 
-		chart = echarts.init(container, themeStore.isDark ? 'dark' : undefined);
+		chart = echarts.init(container, get(isDark) ? 'dark' : undefined);
 		updateChart();
 	}
 
@@ -79,8 +79,8 @@
 				nodeClick: 'zoomToNode',
 				breadcrumb: {
 					show: true,
-					itemStyle: { color: themeStore.isDark ? '#2a2a44' : '#f0f1f3' },
-					textStyle: { color: themeStore.isDark ? '#e8e8f0' : '#1a1a2e' }
+					itemStyle: { color: get(isDark) ? '#2a2a44' : '#f0f1f3' },
+					textStyle: { color: get(isDark) ? '#e8e8f0' : '#1a1a2e' }
 				},
 				label: {
 					show: true,
@@ -100,7 +100,7 @@
 					textShadowBlur: 2
 				},
 				itemStyle: {
-					borderColor: themeStore.isDark ? '#0f0f1a' : '#ffffff',
+					borderColor: get(isDark) ? '#0f0f1a' : '#ffffff',
 					borderWidth: 2,
 					gapWidth: 2
 				},
