@@ -10,9 +10,10 @@
 		arcs: ArcFlow[];
 		height?: string;
 		onCountryClick?: (iso3: string) => void;
+		onRefresh?: () => void;
 	}
 
-	let { arcs, height = '600px', onCountryClick }: Props = $props();
+	let { arcs, height = '600px', onCountryClick, onRefresh }: Props = $props();
 
 	let container: HTMLDivElement;
 	let map: any = null;
@@ -156,6 +157,14 @@
 
 	<div class="scroll-hint">Click map to enable zoom, move mouse away to scroll page</div>
 
+	<button class="refresh-btn" onclick={() => updateArcs()} title="Refresh map arcs">
+		<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+			<path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+			<path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+		</svg>
+		Refresh
+	</button>
+
 	<!-- Legend -->
 	<div class="legend">
 		<div class="legend-title">Product Categories</div>
@@ -197,6 +206,33 @@
 		border: 1px solid var(--border-subtle);
 		opacity: 0.7;
 		pointer-events: none;
+	}
+
+	.refresh-btn {
+		position: absolute;
+		top: var(--space-3);
+		right: 52px;
+		display: flex;
+		align-items: center;
+		gap: var(--space-2);
+		padding: var(--space-2) var(--space-3);
+		font-size: var(--text-xs);
+		font-family: var(--font-body);
+		font-weight: 500;
+		color: var(--text-primary);
+		background: color-mix(in srgb, var(--bg-card) 90%, transparent);
+		backdrop-filter: blur(8px);
+		border: 1px solid var(--border-default);
+		border-radius: var(--radius-md);
+		cursor: pointer;
+		transition: all var(--transition-fast);
+		z-index: 2;
+	}
+
+	.refresh-btn:hover {
+		background: var(--accent-primary);
+		color: white;
+		border-color: var(--accent-primary);
 	}
 
 	.legend {

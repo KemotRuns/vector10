@@ -25,6 +25,14 @@
 		'62': '#6e6aaa', '63': '#6b7d8d'
 	};
 
+	// Distinct country-level colors so they don't blend together
+	const COUNTRY_COLORS = [
+		'#1e3a5c', '#487F84', '#db5111', '#5F597E', '#F5A623',
+		'#3a7d75', '#d65d7a', '#6e6aaa', '#c9a96e', '#5a9e6f',
+		'#8899a6', '#e0874a', '#c47a9b', '#6b7d8d', '#2a6496',
+		'#7b4f8a', '#b87333', '#2d8659', '#a04050', '#4a6fa5'
+	];
+
 	function buildTreemapData(flows: TradeFlow[]) {
 		// Group: Country → HS Chapter → value
 		const countryMap = new Map<string, Map<HSChapter, number>>();
@@ -38,9 +46,10 @@
 		}
 
 		return [...countryMap.entries()]
-			.map(([iso3, chapters]) => ({
+			.map(([iso3, chapters], i) => ({
 				name: getCountry(iso3)?.name ?? iso3,
 				value: [...chapters.values()].reduce((a, b) => a + b, 0),
+				itemStyle: { color: COUNTRY_COLORS[i % COUNTRY_COLORS.length] },
 				children: [...chapters.entries()].map(([ch, val]) => ({
 					name: HS_CHAPTER_LABELS[ch],
 					value: val,
@@ -70,7 +79,8 @@
 		chart.setOption({
 			tooltip: {
 				formatter: (params: any) => {
-					return `${params.name}<br/>${formatTradeValue(params.value)}`;
+					const path = params.treePathInfo?.map((p: any) => p.name).filter(Boolean).join(' → ');
+					return `<b>${path || params.name}</b><br/>${formatTradeValue(params.value)}`;
 				}
 			},
 			series: [{
@@ -85,33 +95,50 @@
 				label: {
 					show: true,
 					formatter: '{b}',
-					fontSize: 12,
+					fontSize: 11,
 					color: '#fff',
-					textShadowColor: 'rgba(0,0,0,0.3)',
-					textShadowBlur: 2
+					textShadowColor: 'rgba(0,0,0,0.5)',
+					textShadowBlur: 3
 				},
 				upperLabel: {
 					show: true,
-					height: 24,
+					height: 28,
 					color: '#fff',
-					fontSize: 12,
-					fontWeight: 600,
-					textShadowColor: 'rgba(0,0,0,0.3)',
-					textShadowBlur: 2
+					fontSize: 13,
+					fontWeight: 700,
+					textShadowColor: 'rgba(0,0,0,0.6)',
+					textShadowBlur: 4,
+					padding: [4, 8]
 				},
 				itemStyle: {
-					borderColor: get(isDark) ? '#0f0f1a' : '#ffffff',
-					borderWidth: 2,
-					gapWidth: 2
+					borderColor: get(isDark) ? '#0d1b2a' : '#ffffff',
+					borderWidth: 3,
+					gapWidth: 3
 				},
 				levels: [
 					{
-						itemStyle: { borderWidth: 3, gapWidth: 3 },
-						upperLabel: { show: true }
+						itemStyle: {
+							borderColor: get(isDark) ? '#0d1b2a' : '#ffffff',
+							borderWidth: 4,
+							gapWidth: 4
+						},
+						upperLabel: {
+							show: true,
+							height: 30,
+							fontSize: 13,
+							fontWeight: 700,
+							formatter: (params: any) => `  ${params.name}  —  ${formatTradeValue(params.value)}`
+						},
+						colorSaturation: [0.4, 0.7]
 					},
 					{
-						itemStyle: { borderWidth: 1, gapWidth: 1 },
-						upperLabel: { show: false }
+						itemStyle: {
+							borderColor: 'rgba(255,255,255,0.15)',
+							borderWidth: 1,
+							gapWidth: 1
+						},
+						upperLabel: { show: false },
+						colorSaturation: [0.5, 0.8]
 					}
 				],
 				data
