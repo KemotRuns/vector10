@@ -1,0 +1,143 @@
+<script lang="ts">
+	import { page } from '$app/state';
+	import { themeStore } from '$lib/stores/theme';
+
+	const navItems = [
+		{ href: '/', label: 'Overview' },
+		{ href: '/trade-flows', label: 'Trade Flows' }
+	];
+</script>
+
+<nav class="nav">
+	<div class="nav-inner">
+		<a href="/" class="logo">
+			<span class="logo-mark">V10</span>
+			<span class="logo-text">Vector10</span>
+		</a>
+
+		<div class="nav-links">
+			{#each navItems as item}
+				<a
+					href={item.href}
+					class="nav-link"
+					class:active={page.url.pathname === item.href}
+				>
+					{item.label}
+				</a>
+			{/each}
+		</div>
+
+		<button class="theme-toggle" onclick={themeStore.toggle} aria-label="Toggle theme">
+			{#if themeStore.isDark}
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<circle cx="12" cy="12" r="5"/>
+					<line x1="12" y1="1" x2="12" y2="3"/>
+					<line x1="12" y1="21" x2="12" y2="23"/>
+					<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+					<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+					<line x1="1" y1="12" x2="3" y2="12"/>
+					<line x1="21" y1="12" x2="23" y2="12"/>
+					<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+					<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+				</svg>
+			{:else}
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+				</svg>
+			{/if}
+		</button>
+	</div>
+</nav>
+
+<style>
+	.nav {
+		position: sticky;
+		top: 0;
+		z-index: 100;
+		height: var(--nav-height);
+		background: var(--bg-primary);
+		border-bottom: 1px solid var(--border-default);
+		backdrop-filter: blur(12px);
+		background: color-mix(in srgb, var(--bg-primary) 85%, transparent);
+	}
+
+	.nav-inner {
+		max-width: var(--content-max-width);
+		margin: 0 auto;
+		padding: 0 var(--space-6);
+		height: 100%;
+		display: flex;
+		align-items: center;
+		gap: var(--space-8);
+	}
+
+	.logo {
+		display: flex;
+		align-items: center;
+		gap: var(--space-2);
+		text-decoration: none;
+		color: var(--text-primary);
+		font-weight: 600;
+	}
+
+	.logo-mark {
+		background: var(--accent-primary);
+		color: white;
+		font-size: var(--text-xs);
+		font-weight: 700;
+		padding: 2px 6px;
+		border-radius: var(--radius-sm);
+		letter-spacing: 0.05em;
+		font-family: var(--font-mono);
+	}
+
+	.logo-text {
+		font-size: var(--text-lg);
+		letter-spacing: -0.02em;
+	}
+
+	.nav-links {
+		display: flex;
+		gap: var(--space-1);
+		flex: 1;
+	}
+
+	.nav-link {
+		padding: var(--space-2) var(--space-3);
+		border-radius: var(--radius-md);
+		font-size: var(--text-sm);
+		font-weight: 500;
+		color: var(--text-secondary);
+		transition: all var(--transition-fast);
+	}
+
+	.nav-link:hover {
+		color: var(--text-primary);
+		background: var(--bg-tertiary);
+	}
+
+	.nav-link.active {
+		color: var(--accent-primary);
+		background: color-mix(in srgb, var(--accent-primary) 10%, transparent);
+	}
+
+	.theme-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border: 1px solid var(--border-default);
+		border-radius: var(--radius-md);
+		background: var(--bg-secondary);
+		color: var(--text-secondary);
+		cursor: pointer;
+		transition: all var(--transition-fast);
+	}
+
+	.theme-toggle:hover {
+		color: var(--text-primary);
+		border-color: var(--border-strong);
+		background: var(--bg-tertiary);
+	}
+</style>

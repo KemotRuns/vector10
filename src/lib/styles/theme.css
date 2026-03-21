@@ -1,0 +1,195 @@
+/* Vector10 Design System */
+
+/* ─── Fonts ─── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+	/* ─── Typography ─── */
+	--font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	--font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+	--text-xs: 0.75rem;
+	--text-sm: 0.875rem;
+	--text-base: 1rem;
+	--text-lg: 1.125rem;
+	--text-xl: 1.25rem;
+	--text-2xl: 1.5rem;
+	--text-3xl: 2rem;
+	--text-4xl: 2.5rem;
+
+	/* ─── Spacing ─── */
+	--space-1: 0.25rem;
+	--space-2: 0.5rem;
+	--space-3: 0.75rem;
+	--space-4: 1rem;
+	--space-5: 1.25rem;
+	--space-6: 1.5rem;
+	--space-8: 2rem;
+	--space-10: 2.5rem;
+	--space-12: 3rem;
+	--space-16: 4rem;
+
+	/* ─── Border Radius ─── */
+	--radius-sm: 4px;
+	--radius-md: 8px;
+	--radius-lg: 12px;
+	--radius-xl: 16px;
+	--radius-full: 9999px;
+
+	/* ─── Shadows ─── */
+	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+	--shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+	--shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+	--shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
+
+	/* ─── Transitions ─── */
+	--transition-fast: 150ms ease;
+	--transition-base: 250ms ease;
+	--transition-slow: 400ms ease;
+
+	/* ─── Layout ─── */
+	--nav-height: 56px;
+	--sidebar-width: 280px;
+	--content-max-width: 1440px;
+
+	/* ─── HS Chapter Colors (Textile Categories) ─── */
+	--hs-50-silk: #d4a853;
+	--hs-51-wool: #c9b18c;
+	--hs-52-cotton: #f5f0e8;
+	--hs-53-vegetable: #7ba05b;
+	--hs-54-filaments: #5b8dd9;
+	--hs-55-staple: #7c6bc4;
+	--hs-56-nonwovens: #a0a0a0;
+	--hs-57-carpets: #c44e52;
+	--hs-58-special: #e8956a;
+	--hs-59-coated: #4a9b8f;
+	--hs-60-knitted: #d97ab5;
+	--hs-61-knit-apparel: #e84393;
+	--hs-62-woven-apparel: #6c5ce7;
+	--hs-63-other: #636e72;
+}
+
+/* ─── Light Theme (Default) ─── */
+:root, [data-theme='light'] {
+	--bg-primary: #ffffff;
+	--bg-secondary: #f8f9fa;
+	--bg-tertiary: #f0f1f3;
+	--bg-card: #ffffff;
+	--bg-elevated: #ffffff;
+	--bg-overlay: rgba(0, 0, 0, 0.4);
+
+	--text-primary: #1a1a2e;
+	--text-secondary: #4a4a68;
+	--text-tertiary: #8888a0;
+	--text-inverse: #ffffff;
+
+	--border-default: #e2e4e8;
+	--border-subtle: #f0f1f3;
+	--border-strong: #c8cad0;
+
+	--accent-primary: #2563eb;
+	--accent-primary-hover: #1d4ed8;
+	--accent-secondary: #7c3aed;
+	--accent-success: #10b981;
+	--accent-warning: #f59e0b;
+	--accent-danger: #ef4444;
+
+	--chart-bg: #ffffff;
+	--chart-grid: #f0f1f3;
+	--chart-axis: #8888a0;
+	--chart-tooltip-bg: #1a1a2e;
+	--chart-tooltip-text: #ffffff;
+}
+
+/* ─── Dark Theme ─── */
+[data-theme='dark'] {
+	--bg-primary: #0f0f1a;
+	--bg-secondary: #16162a;
+	--bg-tertiary: #1e1e36;
+	--bg-card: #1a1a30;
+	--bg-elevated: #222240;
+	--bg-overlay: rgba(0, 0, 0, 0.6);
+
+	--text-primary: #e8e8f0;
+	--text-secondary: #a8a8c0;
+	--text-tertiary: #6868880;
+	--text-inverse: #1a1a2e;
+
+	--border-default: #2a2a44;
+	--border-subtle: #1e1e36;
+	--border-strong: #3a3a58;
+
+	--accent-primary: #3b82f6;
+	--accent-primary-hover: #60a5fa;
+	--accent-secondary: #8b5cf6;
+	--accent-success: #34d399;
+	--accent-warning: #fbbf24;
+	--accent-danger: #f87171;
+
+	--chart-bg: #1a1a30;
+	--chart-grid: #2a2a44;
+	--chart-axis: #6868880;
+	--chart-tooltip-bg: #e8e8f0;
+	--chart-tooltip-text: #1a1a2e;
+
+	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+	--shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+	--shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+	--shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* ─── Global Reset & Base ─── */
+*, *::before, *::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	font-family: var(--font-body);
+	font-size: 16px;
+	line-height: 1.6;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+body {
+	background: var(--bg-primary);
+	color: var(--text-primary);
+	min-height: 100vh;
+	transition: background-color var(--transition-base), color var(--transition-base);
+}
+
+a {
+	color: var(--accent-primary);
+	text-decoration: none;
+}
+
+a:hover {
+	color: var(--accent-primary-hover);
+}
+
+/* ─── Utility Classes ─── */
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}
+
+.card {
+	background: var(--bg-card);
+	border: 1px solid var(--border-default);
+	border-radius: var(--radius-lg);
+	padding: var(--space-6);
+	box-shadow: var(--shadow-sm);
+	transition: box-shadow var(--transition-fast);
+}
+
+.card:hover {
+	box-shadow: var(--shadow-md);
+}
