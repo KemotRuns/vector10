@@ -4,6 +4,7 @@
 	import { get } from 'svelte/store';
 	import type { ArcFlow } from '$lib/types/trade';
 	import { HS_CHAPTER_LABELS, type HSChapter } from '$lib/types/trade';
+	import { formatTradeValue } from '$lib/data/transforms';
 
 	interface Props {
 		arcs: ArcFlow[];
@@ -64,7 +65,18 @@
 			center: [30, 20],
 			zoom: 1.5,
 			projection: 'globe',
-			antialias: true
+			antialias: true,
+			scrollZoom: false
+		});
+
+		// Only enable scroll zoom when user clicks the map
+		map.on('click', () => {
+			map.scrollZoom.enable();
+		});
+
+		// Disable again when mouse leaves
+		container.addEventListener('mouseleave', () => {
+			map?.scrollZoom.disable();
 		});
 
 		const arcLayer = new ArcLayer({
@@ -81,36 +93,48 @@
 		});
 
 		deckOverlay = new MapboxOverlay({
-			layers: [arcLayer]
+			layers: [arcLayer],
+			getTooltip: ({object}: {object?: ArcFlow}) => {
+				if (!object) return null;
+				const label = HS_CHAPTER_LABELS[object.hsChapter as HSChapter] ?? object.hsChapter;
+				return {
+					html: `<b>${object.source.name} → ${object.target.name}</b><br/>${label}<br/>${formatTradeValue(object.tradeValue)}`,
+					style: {
+						backgroundColor: 'rgba(22,18,29,0.9)',
+						color: '#e8ecf0',
+						fontSize: '12px',
+						fontFamily: 'Inter, sans-serif',
+						padding: '8px 12px',
+						borderRadius: '6px',
+						border: '1px solid rgba(255,255,255,0.1)'
+					}
+				};
+			}
 		});
 
 		map.addControl(deckOverlay);
 		map.addControl(new maplibregl.NavigationControl(), 'top-right');
 	}
 
-	function updateArcs() {
+	async function updateArcs() {
 		if (!deckOverlay) return;
 
-		const { ArcLayer } = (globalThis as any).__deckLayers ?? {};
-		if (!ArcLayer) return; // Not yet loaded
-
-		import('@deck.gl/layers').then(({ ArcLayer }) => {
-			deckOverlay.setProps({
-				layers: [
-					new ArcLayer({
-						id: 'trade-arcs',
-						data: arcs,
-						getSourcePosition: (d: ArcFlow) => [d.source.longitude, d.source.latitude],
-						getTargetPosition: (d: ArcFlow) => [d.target.longitude, d.target.latitude],
-						getSourceColor: (d: ArcFlow) => getArcColor(d.hsChapter),
-						getTargetColor: (d: ArcFlow) => getArcColor(d.hsChapter),
-						getWidth: (d: ArcFlow) => getArcWidth(d.tradeValue),
-						greatCircle: true,
-						numSegments: 50,
-						pickable: true
-					})
-				]
-			});
+		const { ArcLayer } = await import('@deck.gl/layers');
+		deckOverlay.setProps({
+			layers: [
+				new ArcLayer({
+					id: 'trade-arcs',
+					data: arcs,
+					getSourcePosition: (d: ArcFlow) => [d.source.longitude, d.source.latitude],
+					getTargetPosition: (d: ArcFlow) => [d.target.longitude, d.target.latitude],
+					getSourceColor: (d: ArcFlow) => getArcColor(d.hsChapter),
+					getTargetColor: (d: ArcFlow) => getArcColor(d.hsChapter),
+					getWidth: (d: ArcFlow) => getArcWidth(d.tradeValue),
+					greatCircle: true,
+					numSegments: 50,
+					pickable: true
+				})
+			]
 		});
 	}
 
@@ -130,9 +154,11 @@
 <div class="globe-wrapper">
 	<div bind:this={container} class="globe-container" style:height></div>
 
+	<div class="scroll-hint">Click map to enable zoom, move mouse away to scroll page</div>
+
 	<!-- Legend -->
 	<div class="legend">
-		<div class="legend-title">HS Chapters</div>
+		<div class="legend-title">Product Categories</div>
 		{#each Object.entries(CHAPTER_COLORS) as [code, rgb]}
 			<div class="legend-item">
 				<span
@@ -155,6 +181,22 @@
 
 	.globe-container {
 		width: 100%;
+	}
+
+	.scroll-hint {
+		position: absolute;
+		top: var(--space-3);
+		left: 50%;
+		transform: translateX(-50%);
+		font-size: var(--text-xs);
+		color: var(--text-tertiary);
+		background: color-mix(in srgb, var(--bg-card) 80%, transparent);
+		backdrop-filter: blur(6px);
+		padding: var(--space-1) var(--space-3);
+		border-radius: var(--radius-full);
+		border: 1px solid var(--border-subtle);
+		opacity: 0.7;
+		pointer-events: none;
 	}
 
 	.legend {

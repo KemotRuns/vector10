@@ -36,57 +36,60 @@
 </script>
 
 <div class="filter-panel">
-	<div class="filter-group">
-		<label class="filter-label" for="year-select">Year</label>
-		<select
-			id="year-select"
-			class="filter-select"
-			value={year}
-			onchange={(e) => onYearChange(Number((e.target as HTMLSelectElement).value))}
-		>
-			{#each availableYears as y}
-				<option value={y}>{y}</option>
-			{/each}
-		</select>
-	</div>
-
-	<div class="filter-group">
-		<span class="filter-label">Direction</span>
-		<div class="toggle-group">
-			<button
-				class="toggle-btn"
-				class:active={direction === 'export'}
-				onclick={() => onDirectionChange('export')}
+	<div class="filter-row-top">
+		<div class="filter-group">
+			<label class="filter-label" for="year-select">Year</label>
+			<select
+				id="year-select"
+				class="filter-select"
+				value={year}
+				onchange={(e) => onYearChange(Number((e.target as HTMLSelectElement).value))}
 			>
-				Exports
-			</button>
-			<button
-				class="toggle-btn"
-				class:active={direction === 'import'}
-				onclick={() => onDirectionChange('import')}
-			>
-				Imports
-			</button>
+				{#each availableYears as y}
+					<option value={y}>{y}</option>
+				{/each}
+			</select>
 		</div>
-	</div>
 
-	<div class="filter-group chapters-group">
-		<div class="filter-label-row">
-			<span class="filter-label">HS Chapters</span>
-			<div class="filter-actions">
-				<button class="link-btn" onclick={selectAllChapters}>All</button>
-				<button class="link-btn" onclick={clearChapters}>None</button>
+		<div class="filter-group">
+			<span class="filter-label">Direction</span>
+			<div class="toggle-group">
+				<button
+					class="toggle-btn"
+					class:active={direction === 'export'}
+					onclick={() => onDirectionChange('export')}
+				>
+					Exports
+				</button>
+				<button
+					class="toggle-btn"
+					class:active={direction === 'import'}
+					onclick={() => onDirectionChange('import')}
+				>
+					Imports
+				</button>
 			</div>
 		</div>
-		<div class="chapter-chips">
+
+		<div class="filter-group bulk-actions">
+			<span class="filter-label">Products</span>
+			<div class="toggle-group">
+				<button class="toggle-btn action-btn" onclick={selectAllChapters}>Select All</button>
+				<button class="toggle-btn action-btn" onclick={clearChapters}>Clear All</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="products-section">
+		<div class="product-chips">
 			{#each allChapters as ch}
 				<button
-					class="chip"
+					class="product-chip"
 					class:selected={selectedChapters.includes(ch)}
 					onclick={() => toggleChapter(ch)}
-					title={HS_CHAPTER_LABELS[ch]}
 				>
-					{ch}
+					<span class="product-code">{ch}</span>
+					<span class="product-name">{HS_CHAPTER_LABELS[ch]}</span>
 				</button>
 			{/each}
 		</div>
@@ -96,13 +99,19 @@
 <style>
 	.filter-panel {
 		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-6);
-		padding: var(--space-4) var(--space-6);
+		flex-direction: column;
+		gap: var(--space-4);
+		padding: var(--space-5) var(--space-6);
 		background: var(--bg-card);
 		border: 1px solid var(--border-default);
 		border-radius: var(--radius-lg);
-		align-items: flex-start;
+	}
+
+	.filter-row-top {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-6);
+		align-items: flex-end;
 	}
 
 	.filter-group {
@@ -111,9 +120,8 @@
 		gap: var(--space-2);
 	}
 
-	.chapters-group {
-		flex: 1;
-		min-width: 200px;
+	.bulk-actions {
+		margin-left: auto;
 	}
 
 	.filter-label {
@@ -122,31 +130,6 @@
 		color: var(--text-tertiary);
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
-	}
-
-	.filter-label-row {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: var(--space-4);
-	}
-
-	.filter-actions {
-		display: flex;
-		gap: var(--space-2);
-	}
-
-	.link-btn {
-		background: none;
-		border: none;
-		color: var(--accent-primary);
-		font-size: var(--text-xs);
-		cursor: pointer;
-		padding: 0;
-	}
-
-	.link-btn:hover {
-		text-decoration: underline;
 	}
 
 	.filter-select {
@@ -187,32 +170,71 @@
 		color: white;
 	}
 
-	.chapter-chips {
+	.action-btn:hover {
+		background: var(--bg-tertiary);
+		color: var(--text-primary);
+	}
+
+	/* Product chips */
+	.products-section {
+		border-top: 1px solid var(--border-subtle);
+		padding-top: var(--space-4);
+	}
+
+	.product-chips {
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--space-1);
+		gap: var(--space-2);
 	}
 
-	.chip {
-		padding: 2px 8px;
+	.product-chip {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-2);
+		padding: var(--space-2) var(--space-3);
 		border: 1px solid var(--border-default);
-		border-radius: var(--radius-full);
+		border-radius: var(--radius-md);
 		background: var(--bg-secondary);
 		color: var(--text-secondary);
-		font-size: var(--text-xs);
-		font-family: var(--font-mono);
+		font-size: var(--text-sm);
+		font-family: var(--font-body);
 		cursor: pointer;
 		transition: all var(--transition-fast);
+		white-space: nowrap;
 	}
 
-	.chip:hover {
-		border-color: var(--accent-primary);
-		color: var(--accent-primary);
+	.product-chip:hover {
+		border-color: var(--accent-secondary);
+		color: var(--text-primary);
+		background: var(--bg-tertiary);
 	}
 
-	.chip.selected {
+	.product-chip.selected {
 		background: var(--accent-primary);
 		border-color: var(--accent-primary);
 		color: white;
+	}
+
+	.product-code {
+		font-family: var(--font-mono);
+		font-size: var(--text-xs);
+		font-weight: 600;
+		opacity: 0.7;
+	}
+
+	.product-name {
+		font-weight: 500;
+	}
+
+	@media (max-width: 768px) {
+		.filter-row-top {
+			flex-direction: column;
+			align-items: stretch;
+			gap: var(--space-3);
+		}
+
+		.bulk-actions {
+			margin-left: 0;
+		}
 	}
 </style>
