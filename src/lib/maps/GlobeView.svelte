@@ -9,15 +9,13 @@
 	interface Props {
 		arcs: ArcFlow[];
 		height?: string;
-		onCountryClick?: (iso3: string) => void;
-		onRefresh?: () => void;
 	}
 
-	let { arcs, height = '600px', onCountryClick, onRefresh }: Props = $props();
+	let { arcs, height = '600px' }: Props = $props();
 
 	let container: HTMLDivElement;
 	let map: any = null;
-	let deckOverlay: any = null;
+	let deckOverlay = $state<any>(null);
 
 	const CHAPTER_COLORS: Record<string, [number, number, number]> = {
 		'50': [245, 166, 35],   // Silk — V10 gold
@@ -59,7 +57,7 @@
 		const darkStyle = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 		const lightStyle = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
 
-		// @ts-expect-error — MapLibre 5 supports 'projection' but types lag behind
+		// @ts-ignore — MapLibre globe projection
 		map = new maplibregl.Map({
 			container,
 			style: get(isDark) ? darkStyle : lightStyle,
@@ -148,39 +146,41 @@
 	});
 
 	$effect(() => {
-		if (deckOverlay && arcs) updateArcs();
+		// Track arcs array length to detect content changes
+		const _len = arcs.length;
+		if (deckOverlay) updateArcs();
 	});
 </script>
 
-<div class="globe-wrapper">
-	<div bind:this={container} class="globe-container" style:height></div>
+<div class="globe-outer">
+	<div class="globe-wrapper">
+		<div bind:this={container} class="globe-container" style:height></div>
 
-	<div class="scroll-hint">Click map to enable zoom, move mouse away to scroll page</div>
+		<div class="scroll-hint">Click map to enable zoom, move mouse away to scroll page</div>
 
-	<button class="refresh-btn" onclick={() => updateArcs()} title="Refresh map arcs">
-		<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-			<path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
-			<path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-		</svg>
-		Refresh
-	</button>
+	</div>
 
-	<!-- Legend -->
+	<!-- Legend below map -->
 	<div class="legend">
-		<div class="legend-title">Product Categories</div>
+		<span class="legend-title">Product Categories</span>
 		{#each Object.entries(CHAPTER_COLORS) as [code, rgb]}
-			<div class="legend-item">
+			<span class="legend-item">
 				<span
 					class="legend-color"
 					style:background="rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
 				></span>
 				<span class="legend-label">{HS_CHAPTER_LABELS[code as HSChapter]}</span>
-			</div>
+			</span>
 		{/each}
 	</div>
 </div>
 
 <style>
+	.globe-outer {
+		display: flex;
+		flex-direction: column;
+	}
+
 	.globe-wrapper {
 		position: relative;
 		border-radius: var(--radius-lg);
@@ -208,61 +208,28 @@
 		pointer-events: none;
 	}
 
-	.refresh-btn {
-		position: absolute;
-		top: var(--space-3);
-		right: 52px;
-		display: flex;
-		align-items: center;
-		gap: var(--space-2);
-		padding: var(--space-2) var(--space-3);
-		font-size: var(--text-xs);
-		font-family: var(--font-body);
-		font-weight: 500;
-		color: var(--text-primary);
-		background: color-mix(in srgb, var(--bg-card) 90%, transparent);
-		backdrop-filter: blur(8px);
-		border: 1px solid var(--border-default);
-		border-radius: var(--radius-md);
-		cursor: pointer;
-		transition: all var(--transition-fast);
-		z-index: 2;
-	}
-
-	.refresh-btn:hover {
-		background: var(--accent-primary);
-		color: white;
-		border-color: var(--accent-primary);
-	}
-
 	.legend {
-		position: absolute;
-		bottom: var(--space-4);
-		left: var(--space-4);
-		background: color-mix(in srgb, var(--bg-card) 90%, transparent);
-		backdrop-filter: blur(8px);
-		border: 1px solid var(--border-default);
-		border-radius: var(--radius-md);
-		padding: var(--space-3);
-		max-height: 280px;
-		overflow-y: auto;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-1) var(--space-4);
+		padding: var(--space-3) var(--space-4);
 		font-size: var(--text-xs);
 	}
 
 	.legend-title {
 		font-weight: 600;
 		font-size: var(--text-xs);
-		color: var(--text-secondary);
+		color: var(--text-tertiary);
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
-		margin-bottom: var(--space-2);
+		margin-right: var(--space-2);
 	}
 
 	.legend-item {
-		display: flex;
+		display: inline-flex;
 		align-items: center;
-		gap: var(--space-2);
-		padding: 2px 0;
+		gap: 5px;
 	}
 
 	.legend-color {

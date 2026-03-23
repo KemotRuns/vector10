@@ -16,7 +16,7 @@
 	let { flows, direction, height = '450px' }: Props = $props();
 
 	let container: HTMLDivElement;
-	let chart: any = null;
+	let chart = $state<any>(null);
 
 	const CHAPTER_COLORS: Record<string, string> = {
 		'50': '#F5A623', '51': '#c9a96e', '52': '#e8d5a8', '53': '#5a9e6f',
@@ -86,12 +86,8 @@
 			series: [{
 				type: 'treemap',
 				roam: false,
-				nodeClick: 'zoomToNode',
-				breadcrumb: {
-					show: true,
-					itemStyle: { color: get(isDark) ? '#2a2a44' : '#f0f1f3' },
-					textStyle: { color: get(isDark) ? '#e8e8f0' : '#1a1a2e' }
-				},
+				nodeClick: false,
+				breadcrumb: { show: false },
 				label: {
 					show: true,
 					formatter: '{b}',
@@ -111,16 +107,16 @@
 					padding: [4, 8]
 				},
 				itemStyle: {
-					borderColor: get(isDark) ? '#0d1b2a' : '#ffffff',
-					borderWidth: 3,
-					gapWidth: 3
+					borderColor: get(isDark) ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)',
+					borderWidth: 1,
+					gapWidth: 1
 				},
 				levels: [
 					{
 						itemStyle: {
-							borderColor: get(isDark) ? '#0d1b2a' : '#ffffff',
-							borderWidth: 4,
-							gapWidth: 4
+							borderColor: get(isDark) ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)',
+							borderWidth: 2,
+							gapWidth: 2
 						},
 						upperLabel: {
 							show: true,
@@ -133,9 +129,9 @@
 					},
 					{
 						itemStyle: {
-							borderColor: 'rgba(255,255,255,0.15)',
+							borderColor: 'rgba(255,255,255,0.1)',
 							borderWidth: 1,
-							gapWidth: 1
+							gapWidth: 0
 						},
 						upperLabel: { show: false },
 						colorSaturation: [0.5, 0.8]
@@ -159,7 +155,9 @@
 	});
 
 	$effect(() => {
-		if (chart && flows) updateChart();
+		const _len = flows.length;
+		const _dir = direction;
+		if (chart) updateChart();
 	});
 </script>
 

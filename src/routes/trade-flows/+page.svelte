@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import type { HSChapter, TradeDirection, TradeFlow } from '$lib/types/trade';
+	import type { HSChapter, TradeDirection } from '$lib/types/trade';
 	import { HS_CHAPTER_LABELS } from '$lib/types/trade';
 	import { flowsToArcs, topCountries, flowsByChapter, formatTradeValue, aggregateFlows } from '$lib/data/transforms';
+	import { getCountry } from '$lib/data/countries';
 	import FilterPanel from '$lib/components/FilterPanel.svelte';
 	import StatCard from '$lib/components/StatCard.svelte';
 	import GlobeView from '$lib/maps/GlobeView.svelte';
@@ -14,23 +15,41 @@
 	const allChapters = Object.keys(HS_CHAPTER_LABELS) as HSChapter[];
 
 	// Filter state
-	let year = $state(2023);
 	let selectedChapters = $state<HSChapter[]>([...allChapters]);
 	let direction = $state<TradeDirection>('export');
+	let selectedCountry = $state('');
 
-	// Filtered data
+	// All countries appearing in the data, resolved to names, junk codes excluded
+	let countryOptions = $derived.by(() => {
+		const codes = new Set<string>();
+		for (const f of data.flows) {
+			codes.add(f.reporter);
+			codes.add(f.partner);
+		}
+		return [...codes]
+			.map(iso3 => ({ iso3, name: getCountry(iso3)?.name ?? '' }))
+			.filter(c => c.name !== '')
+			.sort((a, b) => a.name.localeCompare(b.name));
+	});
+
+	// Filtered data — country filter matches reporter OR partner
 	let filteredFlows = $derived(
 		data.flows.filter(f =>
-			f.year === year &&
-			selectedChapters.includes(f.hsChapter)
+			selectedChapters.includes(f.hsChapter) &&
+			(selectedCountry === '' || f.reporter === selectedCountry || f.partner === selectedCountry)
 		)
 	);
 
 	let aggregatedFlows = $derived(aggregateFlows(filteredFlows));
-	let arcs = $derived(flowsToArcs(filteredFlows));
 	let topExporters = $derived(topCountries(filteredFlows, 'export', 10));
-	let topImporters = $derived(topCountries(filteredFlows, 'import', 10));
 	let chapterBreakdown = $derived(flowsByChapter(filteredFlows));
+
+	// Globe arcs: limit to flows where the reporter is a top-10 country to avoid visual noise
+	let globeFlows = $derived.by(() => {
+		const topCodes = new Set(topExporters.map(c => c.iso3));
+		return filteredFlows.filter(f => topCodes.has(f.reporter));
+	});
+	let arcs = $derived(flowsToArcs(globeFlows));
 
 	// Summary stats
 	let totalTradeValue = $derived(
@@ -62,7 +81,7 @@
 		<div class="header-text">
 			<h1>Global Textile Trade Flows</h1>
 			<p class="subtitle">
-				HS Codes 50–63 | UN Comtrade Data | {year}
+				HS Codes 50–63 | UN Comtrade Data | 2023
 				{#if data.dataSource === 'demo'}
 					<span class="data-badge demo">Demo Data</span>
 				{:else}
@@ -98,13 +117,13 @@
 
 	<!-- Filters -->
 	<FilterPanel
-		{year}
-		availableYears={[2023]}
 		{selectedChapters}
 		{direction}
-		onYearChange={(y) => year = y}
+		countries={countryOptions}
+		{selectedCountry}
 		onChaptersChange={(ch) => selectedChapters = ch}
 		onDirectionChange={(d) => direction = d}
+		onCountryChange={(iso3) => selectedCountry = iso3}
 	/>
 
 	<!-- Visualization Tabs -->

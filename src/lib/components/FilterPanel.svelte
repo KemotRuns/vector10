@@ -1,19 +1,25 @@
 <script lang="ts">
 	import { HS_CHAPTER_LABELS, type HSChapter, type TradeDirection } from '$lib/types/trade';
 
+	interface CountryOption {
+		iso3: string;
+		name: string;
+	}
+
 	interface Props {
-		year: number;
-		availableYears: number[];
 		selectedChapters: HSChapter[];
 		direction: TradeDirection;
-		onYearChange: (year: number) => void;
+		countries: CountryOption[];
+		selectedCountry: string;
 		onChaptersChange: (chapters: HSChapter[]) => void;
 		onDirectionChange: (direction: TradeDirection) => void;
+		onCountryChange: (iso3: string) => void;
 	}
 
 	let {
-		year, availableYears, selectedChapters, direction,
-		onYearChange, onChaptersChange, onDirectionChange
+		selectedChapters, direction,
+		countries, selectedCountry,
+		onChaptersChange, onDirectionChange, onCountryChange
 	}: Props = $props();
 
 	const allChapters = Object.keys(HS_CHAPTER_LABELS) as HSChapter[];
@@ -38,20 +44,6 @@
 <div class="filter-panel">
 	<div class="filter-row-top">
 		<div class="filter-group">
-			<label class="filter-label" for="year-select">Year</label>
-			<select
-				id="year-select"
-				class="filter-select"
-				value={year}
-				onchange={(e) => onYearChange(Number((e.target as HTMLSelectElement).value))}
-			>
-				{#each availableYears as y}
-					<option value={y}>{y}</option>
-				{/each}
-			</select>
-		</div>
-
-		<div class="filter-group">
 			<span class="filter-label">Direction</span>
 			<div class="toggle-group">
 				<button
@@ -69,6 +61,21 @@
 					Imports
 				</button>
 			</div>
+		</div>
+
+		<div class="filter-group">
+			<label class="filter-label" for="country-select">Country</label>
+			<select
+				id="country-select"
+				class="filter-select"
+				value={selectedCountry}
+				onchange={(e) => onCountryChange((e.target as HTMLSelectElement).value)}
+			>
+				<option value="">All countries</option>
+				{#each countries as c}
+					<option value={c.iso3}>{c.name}</option>
+				{/each}
+			</select>
 		</div>
 
 		<div class="filter-group bulk-actions">
@@ -141,6 +148,7 @@
 		font-size: var(--text-sm);
 		font-family: var(--font-body);
 		cursor: pointer;
+		min-width: 180px;
 	}
 
 	.toggle-group {

@@ -44,8 +44,19 @@ function extractHSChapter(cmdCode: string): HSChapter | null {
 	return null;
 }
 
-/** Aggregate partners to skip (World, areas, etc.) */
-const SKIP_PARTNERS = new Set(['W00', 'N/A', '']);
+/** Aggregate/invalid partner codes to skip (World, regions, unspecified areas) */
+const SKIP_PARTNERS = new Set([
+	'W00', 'N/A', '',
+	'_X',          // Unspecified areas
+	'XX',          // Unspecified
+	'X1',          // Unspecified (alt)
+	'A59',         // ASEAN aggregate
+	'A79',         // Asia aggregate
+	'E19',         // EU aggregate
+	'F19',         // Europe aggregate
+	'O19',         // Oceania aggregate
+	'S19',         // South America aggregate
+]);
 
 /** Convert a raw Comtrade record to our TradeFlow type */
 function recordToTradeFlow(record: ComtradeRecord): TradeFlow | null {
@@ -53,7 +64,7 @@ function recordToTradeFlow(record: ComtradeRecord): TradeFlow | null {
 	const hsChapter = extractHSChapter(record.cmdCode);
 
 	if (!direction || !hsChapter || record.primaryValue === null || record.primaryValue === 0) return null;
-	if (record.reporterISO === 'N/A' || SKIP_PARTNERS.has(record.partnerISO)) return null;
+	if (SKIP_PARTNERS.has(record.reporterISO) || SKIP_PARTNERS.has(record.partnerISO)) return null;
 
 	const year = typeof record.period === 'string' ? parseInt(record.period, 10) : record.period;
 

@@ -17,7 +17,7 @@
 	let { flows, height = '500px', maxNodes = 12 }: Props = $props();
 
 	let container: HTMLDivElement;
-	let chart: ECharts | null = null;
+	let chart = $state<any>(null);
 
 	function buildSankeyData(flows: TradeFlow[]) {
 		// Aggregate: Exporter → HS Chapter → Importer
@@ -158,7 +158,8 @@
 	});
 
 	$effect(() => {
-		if (chart && flows) updateChart();
+		const _len = flows.length;
+		if (chart) updateChart();
 	});
 </script>
 
