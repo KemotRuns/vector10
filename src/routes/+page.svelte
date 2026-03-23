@@ -41,20 +41,19 @@
 				</div>
 			</a>
 
-			<div class="dashboard-card card coming-soon">
+			<a href="/consumer-spending" class="dashboard-card card">
 				<div class="card-icon">
 					<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-						<line x1="12" y1="20" x2="12" y2="10"/>
-						<line x1="18" y1="20" x2="18" y2="4"/>
-						<line x1="6" y1="20" x2="6" y2="16"/>
+						<circle cx="8" cy="14" r="3"/><circle cx="16" cy="8" r="5"/>
+						<circle cx="12" cy="18" r="2"/><circle cx="18" cy="16" r="2.5"/>
 					</svg>
 				</div>
 				<div class="card-content">
-					<h3>Fiber Price Index</h3>
-					<p>Track cotton, polyester, nylon, and wool price indices with correlation analysis to trade volumes.</p>
-					<span class="card-tag muted">Coming Soon</span>
+					<h3>Consumer Spending</h3>
+					<p>Compare annual apparel spend per person vs. items purchased across 30 global markets. Identify premium vs. volume positioning.</p>
+					<span class="card-tag">Live</span>
 				</div>
-			</div>
+			</a>
 
 			<div class="dashboard-card card coming-soon">
 				<div class="card-icon">

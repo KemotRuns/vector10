@@ -5,7 +5,8 @@
 
 	const navItems = [
 		{ href: '/', label: 'Overview' },
-		{ href: '/trade-flows', label: 'Trade Flows' }
+		{ href: '/trade-flows', label: 'Trade Flows' },
+		{ href: '/consumer-spending', label: 'Consumer Spending' }
 	];
 </script>
 
