@@ -193,6 +193,12 @@
 			</table>
 		</div>
 	</div>
+
+	<!-- Methodology -->
+	<div class="methodology">
+		<h4 class="methodology-title">Methodology</h4>
+		<p>Trade flow data sourced from the <strong>UN Comtrade</strong> database (2023), covering HS codes 50–63 (textiles, apparel, and made-up articles). Values represent reported bilateral merchandise trade in USD. Aggregate and unresolved partner codes are excluded. The globe visualization shows flows from the top 10 exporters to reduce visual clutter. Sankey diagrams aggregate the top 12 exporters/importers and top 8 product categories by value.</p>
+	</div>
 </div>
 
 <style>
@@ -343,6 +349,21 @@
 
 	.data-table tbody tr:hover {
 		background: var(--bg-secondary);
+	}
+
+	.methodology {
+		padding: var(--space-4);
+		font-size: var(--text-xs);
+		color: var(--text-tertiary);
+		line-height: 1.6;
+		border-top: 1px solid var(--border-subtle);
+	}
+
+	.methodology-title {
+		font-size: var(--text-sm);
+		font-weight: 600;
+		color: var(--text-secondary);
+		margin-bottom: var(--space-2);
 	}
 
 	@media (max-width: 768px) {

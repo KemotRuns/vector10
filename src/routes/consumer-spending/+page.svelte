@@ -119,6 +119,12 @@
 			</tbody>
 		</table>
 	</div>
+
+	<!-- Methodology -->
+	<div class="methodology">
+		<h4 class="methodology-title">Methodology</h4>
+		<p>Consumer spending data compiled from <strong>NIQ-GfK 2025 European Consumer Study</strong> (25 European markets), <strong>Statista</strong> (apparel spend per capita), and <strong>Wunderlabel</strong> industry reports. Spend per capita represents annual apparel expenditure in USD. Items per capita sourced from industry surveys and national statistics where available. Average price per item is calculated (spend / items). Population figures from World Bank 2023 estimates.</p>
+	</div>
 </div>
 
 <style>
@@ -291,6 +297,21 @@
 
 	.data-table tbody tr:hover {
 		background: var(--bg-secondary);
+	}
+
+	.methodology {
+		padding: var(--space-4);
+		font-size: var(--text-xs);
+		color: var(--text-tertiary);
+		line-height: 1.6;
+		border-top: 1px solid var(--border-subtle);
+	}
+
+	.methodology-title {
+		font-size: var(--text-sm);
+		font-weight: 600;
+		color: var(--text-secondary);
+		margin-bottom: var(--space-2);
 	}
 
 	@media (max-width: 768px) {
