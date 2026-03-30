@@ -90,34 +90,36 @@
 	<!-- Data Table -->
 	<div class="table-card card">
 		<h3 class="table-title">All Markets — Ranked by Spend per Capita</h3>
-		<table class="data-table">
-			<thead>
-				<tr>
-					<th>#</th>
-					<th>Country</th>
-					<th>Region</th>
-					<th class="th-right">Spend / Person</th>
-					<th class="th-right">Items / Person</th>
-					<th class="th-right">Avg Price / Item</th>
-				</tr>
-			</thead>
-			<tbody>
-				{#each [...filtered].sort((a, b) => b.spendPerCapita - a.spendPerCapita) as country, i}
+		<div class="table-scroll">
+			<table class="data-table">
+				<thead>
 					<tr>
-						<td class="rank">{i + 1}</td>
-						<td class="country-name">{country.country}</td>
-						<td>
-							<span class="region-tag" style:background="{REGION_COLORS[country.region]}20" style:color={REGION_COLORS[country.region]}>
-								{country.region}
-							</span>
-						</td>
-						<td class="value">${country.spendPerCapita}</td>
-						<td class="value">{country.itemsPerCapita}</td>
-						<td class="value">${Math.round(country.spendPerCapita / country.itemsPerCapita)}</td>
+						<th>#</th>
+						<th>Country</th>
+						<th class="hide-mobile">Region</th>
+						<th class="th-right">Spend</th>
+						<th class="th-right">Items</th>
+						<th class="th-right">Avg Price</th>
 					</tr>
-				{/each}
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					{#each [...filtered].sort((a, b) => b.spendPerCapita - a.spendPerCapita) as country, i}
+						<tr>
+							<td class="rank">{i + 1}</td>
+							<td class="country-name">{country.country}</td>
+							<td class="hide-mobile">
+								<span class="region-tag" style:background="{REGION_COLORS[country.region]}20" style:color={REGION_COLORS[country.region]}>
+									{country.region}
+								</span>
+							</td>
+							<td class="value">${country.spendPerCapita}</td>
+							<td class="value">{country.itemsPerCapita}</td>
+							<td class="value">${Math.round(country.spendPerCapita / country.itemsPerCapita)}</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
 	</div>
 
 	<!-- Methodology -->
@@ -233,6 +235,11 @@
 		overflow: hidden;
 	}
 
+	.table-scroll {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
 	/* Table */
 	.table-title {
 		font-size: var(--text-base);
@@ -324,6 +331,14 @@
 		.filter-bar {
 			flex-direction: column;
 			align-items: flex-start;
+		}
+
+		.hide-mobile {
+			display: none;
+		}
+
+		.viz-container {
+			padding: var(--space-2);
 		}
 	}
 </style>

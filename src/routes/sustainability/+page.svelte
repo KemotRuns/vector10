@@ -147,17 +147,17 @@
 					<tr>
 						<th>#</th>
 						<th>Country</th>
-						<th>Region</th>
+						<th class="hide-mobile">Region</th>
 						<th class="th-right sortable" onclick={() => toggleSort('carbon')}>
 							Carbon{sortIndicator('carbon')}
 						</th>
 						<th class="th-right sortable" onclick={() => toggleSort('water')}>
 							Water{sortIndicator('water')}
 						</th>
-						<th class="th-right sortable" onclick={() => toggleSort('labor')}>
+						<th class="th-right sortable hide-mobile" onclick={() => toggleSort('labor')}>
 							Labor{sortIndicator('labor')}
 						</th>
-						<th class="th-right sortable" onclick={() => toggleSort('transparency')}>
+						<th class="th-right sortable hide-mobile" onclick={() => toggleSort('transparency')}>
 							Transp.{sortIndicator('transparency')}
 						</th>
 						<th class="th-right sortable" onclick={() => toggleSort('composite')}>
@@ -170,15 +170,15 @@
 						<tr>
 							<td class="rank">{i + 1}</td>
 							<td class="country-name">{country.country}</td>
-							<td>
+							<td class="hide-mobile">
 								<span class="region-tag" style:background="{REGION_COLORS[country.region]}20" style:color={REGION_COLORS[country.region]}>
 									{country.region}
 								</span>
 							</td>
 							<td class="value">{country.carbonPerTon.toLocaleString()}</td>
 							<td class="value">{country.waterPerKg}</td>
-							<td class="value">{country.laborIndex}</td>
-							<td class="value">{country.transparencyIndex}</td>
+							<td class="value hide-mobile">{country.laborIndex}</td>
+							<td class="value hide-mobile">{country.transparencyIndex}</td>
 							<td class="value composite-score">{country.compositeScore}</td>
 						</tr>
 					{/each}
@@ -474,6 +474,14 @@
 		.filter-bar {
 			flex-direction: column;
 			align-items: flex-start;
+		}
+
+		.viz-container {
+			padding: var(--space-2);
+		}
+
+		.data-table .hide-mobile {
+			display: none;
 		}
 	}
 </style>

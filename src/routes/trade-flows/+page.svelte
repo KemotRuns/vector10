@@ -376,5 +376,10 @@
 		.tables-grid {
 			grid-template-columns: 1fr;
 		}
+
+		.tab {
+			padding: var(--space-2) var(--space-3);
+			font-size: var(--text-xs);
+		}
 	}
 </style>

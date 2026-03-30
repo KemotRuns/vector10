@@ -39,4 +39,10 @@
 		margin: 0 auto;
 		padding: var(--space-6);
 	}
+
+	@media (max-width: 768px) {
+		.main {
+			padding: var(--space-4);
+		}
+	}
 </style>

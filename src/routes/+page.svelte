@@ -55,19 +55,19 @@
 				</div>
 			</a>
 
-			<div class="dashboard-card card coming-soon">
+			<a href="/sustainability" class="dashboard-card card">
 				<div class="card-icon">
 					<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-						<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
-						<path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83M16.62 12l-5.74 9.94"/>
+						<path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 19 2c1 2 2 4.5 2 8 0 5.5-4.8 10-10 10Z"/>
+						<path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
 					</svg>
 				</div>
 				<div class="card-content">
 					<h3>Sustainability Metrics</h3>
 					<p>ESG scores, water usage, carbon footprint, and labor indices for textile supply chains by country.</p>
-					<span class="card-tag muted">Coming Soon</span>
+					<span class="card-tag">Live</span>
 				</div>
-			</div>
+			</a>
 		</div>
 	</section>
 
@@ -183,10 +183,6 @@
 		border-color: var(--accent-primary);
 		box-shadow: var(--shadow-lg);
 		transform: translateY(-2px);
-	}
-
-	.coming-soon {
-		opacity: 0.6;
 	}
 
 	.card-icon {
