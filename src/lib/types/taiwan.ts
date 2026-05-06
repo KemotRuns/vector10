@@ -17,10 +17,11 @@ export interface TaiwanArc {
 	subcats: Record<string, number>;
 }
 
-export interface TaiwanData {
+export interface TaiwanYearData {
+	label: string;
 	records: TaiwanRecord[];
-	chapterTotals: {
-		'2025': { Imports: Record<string, number>; Exports: Record<string, number> };
-		'2026Q1': { Imports: Record<string, number>; Exports: Record<string, number> };
-	};
+}
+
+export interface TaiwanData {
+	years: Record<string, TaiwanYearData>;
 }

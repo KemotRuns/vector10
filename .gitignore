@@ -27,3 +27,6 @@ vite.config.ts.timestamp-*
 
 # Screenshots (debug)
 *.png
+
+# Raw source data (processed output committed instead)
+static/data/raw/

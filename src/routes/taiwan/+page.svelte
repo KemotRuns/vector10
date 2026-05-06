@@ -13,6 +13,8 @@
 	};
 
 	// ─── Filter state ────────────────────────────────────────────────────────────
+	const availableYears = Object.keys(data.data.years).sort();
+	let selectedYear = $state<string>(availableYears.at(-1) ?? '2025');
 	let direction = $state<'both' | 'Imports' | 'Exports'>('both');
 	let hsCode    = $state('all');
 	let minValM   = $state(0);          // minimum value in $M
@@ -21,17 +23,20 @@
 	let sortCol   = $state<keyof TaiwanRecord | 'pct'>('value');
 	let sortDir   = $state<'asc' | 'desc'>('desc');
 
+	const activeRecords = $derived(data.data.years[selectedYear]?.records ?? []);
+	const activeLabel   = $derived(data.data.years[selectedYear]?.label ?? selectedYear);
+
 	// ─── Totals ──────────────────────────────────────────────────────────────────
 	const totalExports = $derived(
-		data.data.records.filter(r => r.direction === 'Exports').reduce((s, r) => s + r.value, 0)
+		activeRecords.filter(r => r.direction === 'Exports').reduce((s, r) => s + r.value, 0)
 	);
 	const totalImports = $derived(
-		data.data.records.filter(r => r.direction === 'Imports').reduce((s, r) => s + r.value, 0)
+		activeRecords.filter(r => r.direction === 'Imports').reduce((s, r) => s + r.value, 0)
 	);
 
 	// ─── Filtered records (for table) ────────────────────────────────────────────
 	let filteredRecords = $derived.by(() => {
-		let rows = data.data.records.slice();
+		let rows = activeRecords.slice();
 		if (direction !== 'both') rows = rows.filter(r => r.direction === direction);
 		if (hsCode !== 'all')     rows = rows.filter(r => r.code === hsCode);
 		if (search)               rows = rows.filter(r => r.country.toLowerCase().includes(search.toLowerCase()));
@@ -110,7 +115,7 @@
 			<p class="tw-subtitle">Textile imports &amp; exports by country · HS 50–63</p>
 		</div>
 		<div class="tw-header-right">
-			<span class="badge period">Jan – Mar 2026 (preliminary)</span>
+			<span class="badge period">{activeLabel}</span>
 			<span class="badge hs">HS 50 – 63</span>
 			<span class="badge note">Taiwan not in UN Comtrade</span>
 		</div>
@@ -120,6 +125,20 @@
 
 		<!-- ── Sidebar ─────────────────────────────────────────────────────── -->
 		<aside class="tw-sidebar">
+
+			<!-- Year selector -->
+			<div class="ctrl-group">
+				<span class="ctrl-label">Year</span>
+				<div class="year-toggle">
+					{#each availableYears as yr}
+						<button
+							class="year-btn"
+							class:active={selectedYear === yr}
+							onclick={() => selectedYear = yr}
+						>{yr}</button>
+					{/each}
+				</div>
+			</div>
 
 			<!-- Direction -->
 			<div class="ctrl-group">
@@ -225,7 +244,7 @@
 			<div class="table-wrap">
 				<div class="table-header">
 					<div>
-						<div class="table-title">Trade Detail — Jan–Mar 2026</div>
+						<div class="table-title">Trade Detail — {activeLabel}</div>
 						<div class="table-count">{filteredRecords.length.toLocaleString()} records · {new Set(filteredRecords.map(r => r.country)).size} countries</div>
 					</div>
 				</div>
@@ -381,6 +400,32 @@
 		letter-spacing: 0.12em;
 		text-transform: uppercase;
 		color: var(--text-tertiary);
+	}
+
+	/* Year toggle */
+	.year-toggle {
+		display: flex;
+		gap: 4px;
+	}
+
+	.year-btn {
+		flex: 1;
+		padding: 6px 4px;
+		border-radius: var(--radius-md);
+		border: 1px solid var(--border-default);
+		background: transparent;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.15s;
+		color: var(--text-secondary);
+	}
+
+	.year-btn.active {
+		background: color-mix(in srgb, var(--accent-primary) 10%, transparent);
+		border-color: var(--accent-primary);
+		color: var(--accent-primary);
 	}
 
 	/* Direction toggle */
