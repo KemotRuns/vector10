@@ -4,7 +4,7 @@
 	import v10Logo from '$lib/assets/v10-logo.svg';
 
 	const navItems = [
-		{ href: '/', label: 'Overview' },
+		{ href: '/', label: 'Dashboards' },
 		{ href: '/trade-flows', label: 'Trade Flows' },
 		{ href: '/taiwan', label: 'Taiwan Lens' },
 		{ href: '/consumer-spending', label: 'Consumer Spending' },
@@ -20,7 +20,7 @@
 
 <nav class="nav">
 	<div class="nav-inner">
-		<a href="/" class="logo" onclick={closeMenu}>
+		<a href="https://vector10.com" class="logo" target="_blank" rel="noopener noreferrer">
 			<img src={v10Logo} alt="V10" class="logo-img" />
 		</a>
 
