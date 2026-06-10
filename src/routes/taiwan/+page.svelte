@@ -238,6 +238,7 @@
 				{totalImports}
 				onHover={arc => hoveredArc = arc}
 				height="520px"
+				geojson={data.geojson}
 			/>
 
 			<!-- Table -->
