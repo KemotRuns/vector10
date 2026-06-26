@@ -36,7 +36,7 @@
 		const maxV = 500_000_000;
 		const clamped = Math.max(minV, Math.min(maxV, value));
 		const t = (Math.log(clamped) - Math.log(minV)) / (Math.log(maxV) - Math.log(minV));
-		return 0.5 + t * 5.5;
+		return 0.3 + t * 2.7;
 	}
 
 	function fmt(v: number): string {
