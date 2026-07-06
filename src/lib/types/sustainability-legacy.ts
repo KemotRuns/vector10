@@ -1,0 +1,65 @@
+// Legacy types for the current live /sustainability page.
+// The redesigned module at /sustainability-proposal uses $lib/types/sustainability instead;
+// delete this file when the proposal replaces the live page.
+
+export type SustainabilityMetric = 'carbon' | 'water' | 'labor' | 'transparency';
+
+export type LegacyProducerRegion =
+	| 'East Asia'
+	| 'South Asia'
+	| 'Southeast Asia'
+	| 'Europe'
+	| 'Americas'
+	| 'Africa & Middle East';
+
+export interface LegacyCountrySustainability {
+	country: string;
+	iso3: string;
+	region: LegacyProducerRegion;
+	/** CO₂ equivalent in kg per metric ton of textile produced */
+	carbonPerTon: number;
+	/** Water usage in liters per kg of textile produced */
+	waterPerKg: number;
+	/** Labor conditions index: 0 (worst) to 100 (best) */
+	laborIndex: number;
+	/** Supply chain transparency index: 0 (opaque) to 100 (transparent) */
+	transparencyIndex: number;
+	/** Composite ESG score: 0 (worst) to 100 (best) */
+	compositeScore: number;
+	/** Source citations */
+	sources: string;
+}
+
+export const METRIC_LABELS: Record<SustainabilityMetric, string> = {
+	carbon: 'Carbon Footprint',
+	water: 'Water Usage',
+	labor: 'Labor Conditions',
+	transparency: 'Transparency'
+};
+
+export const METRIC_UNITS: Record<SustainabilityMetric, string> = {
+	carbon: 'kg CO₂e / ton',
+	water: 'L / kg',
+	labor: 'score (0–100)',
+	transparency: 'score (0–100)'
+};
+
+export const ECO_COLORS: Record<SustainabilityMetric, string> = {
+	carbon: '#6b8f71',
+	water: '#4a90a4',
+	labor: '#c4956a',
+	transparency: '#5a7247'
+};
+
+// Original names, so restored legacy files only need their import path changed
+export type CountrySustainability = LegacyCountrySustainability;
+export type ProducerRegion = LegacyProducerRegion;
+
+export const REGION_COLORS: Record<LegacyProducerRegion, string> = {
+	'East Asia': '#487F84',
+	'South Asia': '#c4956a',
+	'Southeast Asia': '#5a9e6f',
+	Europe: '#1e3a5c',
+	Americas: '#db5111',
+	'Africa & Middle East': '#5F597E'
+};

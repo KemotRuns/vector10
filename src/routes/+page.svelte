@@ -78,8 +78,8 @@
 					</svg>
 				</div>
 				<div class="card-content">
-					<h3>Sustainability & Compliance</h3>
-					<p>Footprint and 2026 regulatory exposure — CSRD, CBAM, EPR and Digital Product Passports — across 43 sourcing countries, with an interactive footprint check.</p>
+					<h3>Sustainability Metrics</h3>
+					<p>ESG scores, water usage, carbon footprint, and labor indices for textile supply chains by country.</p>
 					<span class="card-tag">Live</span>
 				</div>
 			</a>

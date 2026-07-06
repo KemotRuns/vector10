@@ -7,8 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - 2026-07-06
 
-### Changed
-- Complete redo of the Sustainability dashboard as "Sourcing Compliance & Footprint"
+### Added
+- New "Sourcing Compliance & Footprint" module at `/sustainability-proposal` — an
+  unlisted, noindexed page for team review; the existing `/sustainability` dashboard
+  is unchanged until the proposal is approved (then it replaces it)
   - Expanded from 20 to 43 countries (now includes Taiwan, Japan, Uzbekistan, and 20 more)
   - New metrics: grid carbon intensity, low-carbon electricity share, WRI water stress,
     ITUC labor risk, EU export share, plus Vector10-assessed regulatory exposure tiers

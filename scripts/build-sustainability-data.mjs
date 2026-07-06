@@ -7,7 +7,8 @@ import { fileURLToPath } from 'url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const RAW = join(ROOT, 'static/data/raw/sustainability');
-const OUT = join(ROOT, 'static/data/sustainability.json');
+// v2: consumed by /sustainability-proposal (the legacy /sustainability page keeps sustainability.json)
+const OUT = join(ROOT, 'static/data/sustainability-v2.json');
 
 // kWh of electricity per metric ton of finished textile (spinning → finishing)
 const MWH_PER_TON = 5;
