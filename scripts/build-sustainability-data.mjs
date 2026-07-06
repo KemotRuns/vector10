@@ -17,6 +17,8 @@ const PROCESS_HEAT_ADDER = { cotton: 1200, mixed: 1050, synthetic: 950 };
 
 const TIER_VALUE = { low: 20, medium: 60, high: 90 };
 const TIERS = new Set(Object.keys(TIER_VALUE));
+const TARIFF_STATUSES = new Set(['free', 'reduced', 'mfn', 'penalty']);
+const LEAD_TIERS = new Set(['near', 'mid', 'far']);
 
 // footprintScore weights (all normalized 0–1, higher = cleaner)
 const FOOTPRINT_WEIGHTS = { carbonPerTon: 0.4, waterPerKg: 0.2, waterStress: 0.2, lowCarbonShare: 0.2 };
@@ -52,6 +54,7 @@ const water = indexByIso3(readCsv('water.csv'), 'water.csv');
 const labor = indexByIso3(readCsv('labor.csv'), 'labor.csv');
 const transparency = indexByIso3(readCsv('transparency.csv'), 'transparency.csv');
 const regulatory = indexByIso3(readCsv('regulatory.csv'), 'regulatory.csv');
+const markets = indexByIso3(readCsv('markets.csv'), 'markets.csv');
 const sources = JSON.parse(readFileSync(join(RAW, 'sources.json'), 'utf-8'));
 
 // --- Join, validating every country has every metric ---
@@ -62,7 +65,8 @@ for (const c of countries) {
 		['water', water],
 		['labor', labor],
 		['transparency', transparency],
-		['regulatory', regulatory]
+		['regulatory', regulatory],
+		['markets', markets]
 	]) {
 		if (!map.has(c.iso3)) missing.push(`${c.iso3} (${name}.csv)`);
 	}
@@ -78,6 +82,10 @@ const tier = (row, key, iso3) => {
 	if (!TIERS.has(row[key])) fail(`${iso3}: ${key} invalid tier "${row[key]}"`);
 	return row[key];
 };
+const oneOf = (row, key, allowed, iso3) => {
+	if (!allowed.has(row[key])) fail(`${iso3}: ${key} invalid value "${row[key]}"`);
+	return row[key];
+};
 
 const rows = countries.map((c) => {
 	const g = grid.get(c.iso3);
@@ -85,6 +93,7 @@ const rows = countries.map((c) => {
 	const l = labor.get(c.iso3);
 	const t = transparency.get(c.iso3);
 	const r = regulatory.get(c.iso3);
+	const m = markets.get(c.iso3);
 
 	if (!(c.fiberBase in PROCESS_HEAT_ADDER)) fail(`${c.iso3}: unknown fiberBase "${c.fiberBase}"`);
 	for (const id of c.sourceIds.split(';')) {
@@ -108,6 +117,12 @@ const rows = countries.map((c) => {
 		csrdExposure: tier(r, 'csrdExposure', c.iso3),
 		eprExposure: tier(r, 'eprExposure', c.iso3),
 		dppReadiness: num(r, 'dppReadiness', c.iso3),
+		laborCostUsd: num(m, 'laborCostUsd', c.iso3),
+		tariffEu: oneOf(m, 'tariffEu', TARIFF_STATUSES, c.iso3),
+		tariffUs: oneOf(m, 'tariffUs', TARIFF_STATUSES, c.iso3),
+		uflpaExposure: tier(m, 'uflpaExposure', c.iso3),
+		leadEu: oneOf(m, 'leadEu', LEAD_TIERS, c.iso3),
+		leadUs: oneOf(m, 'leadUs', LEAD_TIERS, c.iso3),
 		sourceIds: c.sourceIds.split(';'),
 		notes: c.notes || undefined
 	};
@@ -124,7 +139,12 @@ const normWater = minMax(rows.map((r) => r.waterPerKg));
 const normStress = minMax(rows.map((r) => r.waterStress));
 const normLowCarbon = minMax(rows.map((r) => r.lowCarbonShare));
 
+// Labor cost index on a log scale (wages span $80–$3,200/mo; linear would crush the low end)
+const normLogWage = minMax(rows.map((r) => Math.log(r.laborCostUsd)));
+
 for (const r of rows) {
+	r.laborCostIndex = Math.round(normLogWage(Math.log(r.laborCostUsd)) * 100);
+
 	// higher = cleaner: invert lower-is-better metrics
 	const footprint01 =
 		FOOTPRINT_WEIGHTS.carbonPerTon * (1 - normCarbon(r.carbonPerTon)) +

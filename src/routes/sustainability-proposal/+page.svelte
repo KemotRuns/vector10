@@ -1,9 +1,11 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import type { ProducerRegion } from '$lib/types/sustainability';
+	import type { MarketKey, ProducerRegion } from '$lib/types/sustainability';
+	import { toMarketView } from '$lib/utils/marketRisk';
 	import StatCard from '$lib/components/StatCard.svelte';
 	import SustainabilityHero from '$lib/components/sustainability/SustainabilityHero.svelte';
 	import RegionFilter from '$lib/components/sustainability/RegionFilter.svelte';
+	import MarketSelector from '$lib/components/sustainability/MarketSelector.svelte';
 	import CountryDetailPanel from '$lib/components/sustainability/CountryDetailPanel.svelte';
 	import RegTimeline from '$lib/components/sustainability/RegTimeline.svelte';
 	import FootprintCheck from '$lib/components/sustainability/FootprintCheck.svelte';
@@ -19,23 +21,24 @@
 
 	let allRegions = $derived([...new Set(countries.map((c) => c.region))].sort() as ProducerRegion[]);
 	let selectedRegion = $state<ProducerRegion | ''>('');
+	let selectedMarkets = $state<MarketKey[]>(['eu']);
 	let selectedIso3 = $state<string | null>(null);
+	let vizMode = $state<'footprint' | 'cost'>('cost');
 
 	let filtered = $derived(
 		selectedRegion === '' ? countries : countries.filter((c) => c.region === selectedRegion)
 	);
+	let enriched = $derived(filtered.map((c) => toMarketView(c, selectedMarkets)));
 	let selectedCountry = $derived(countries.find((c) => c.iso3 === selectedIso3) ?? null);
 
-	// KPI stats
-	let highRiskCount = $derived(filtered.filter((c) => c.complianceRiskScore >= 60).length);
+	// KPI stats (market-aware)
+	let highRiskCount = $derived(enriched.filter((c) => c.marketRisk >= 60).length);
 	let cleanestGrid = $derived(
 		filtered.reduce((a, b) => (a.gridCarbonIntensity < b.gridCarbonIntensity ? a : b))
 	);
-	let medianFootprint = $derived.by(() => {
-		const sorted = [...filtered].map((c) => c.footprintScore).sort((a, b) => a - b);
-		const mid = Math.floor(sorted.length / 2);
-		return sorted.length % 2 ? sorted[mid] : Math.round((sorted[mid - 1] + sorted[mid]) / 2);
-	});
+	let bestValue = $derived(
+		enriched.reduce((a, b) => (a.costIndex + a.marketRisk < b.costIndex + b.marketRisk ? a : b))
+	);
 
 	function selectCountry(iso3: string) {
 		selectedIso3 = selectedIso3 === iso3 ? null : iso3;
@@ -46,7 +49,7 @@
 	<title>Sourcing Compliance & Footprint (Proposal) — Vector10</title>
 	<meta
 		name="description"
-		content="Footprint and 2026 regulatory exposure — CSRD, CBAM, EPR and Digital Product Passports — across 43 textile sourcing countries, with an interactive sourcing footprint check."
+		content="Cost, footprint and market-conditional regulatory exposure — CSRD, CBAM, EPR, UFLPA and Digital Product Passports — across 43 textile sourcing countries, with an interactive sourcing check."
 	/>
 	<!-- Internal review page — keep out of search indexes -->
 	<meta name="robots" content="noindex, nofollow" />
@@ -57,29 +60,55 @@
 
 	<div class="stats-bar">
 		<StatCard label="Countries" value={String(filtered.length)} subtitle="Sourcing countries mapped" />
-		<StatCard label="High Compliance Risk" value={String(highRiskCount)} subtitle="Risk score ≥ 60/100" />
+		<StatCard label="High Compliance Risk" value={String(highRiskCount)} subtitle="For your selling markets" />
 		<StatCard
 			label="Cleanest Grid"
 			value={cleanestGrid.country}
 			subtitle={cleanestGrid.gridCarbonIntensity + ' gCO₂/kWh'}
 		/>
-		<StatCard label="Median Footprint" value={medianFootprint + '/100'} subtitle="Higher = cleaner" />
+		<StatCard
+			label="Best Value"
+			value={bestValue.country}
+			subtitle="Lowest cost × risk for your markets"
+		/>
 	</div>
 
+	<MarketSelector selected={selectedMarkets} onChange={(m) => (selectedMarkets = m)} />
 	<RegionFilter regions={allRegions} selected={selectedRegion} onChange={(r) => (selectedRegion = r)} />
 
 	<div class="viz-container card">
-		<h3 class="section-title">Footprint vs. compliance risk</h3>
-		<p class="section-subtitle">
-			Bubble size = share of textile exports going to the EU · click a country for detail
-		</p>
-		<RiskQuadrantChart data={filtered} onSelect={selectCountry} />
+		<div class="viz-header">
+			<div>
+				<h3 class="section-title">
+					{vizMode === 'cost' ? 'Cost vs. compliance risk' : 'Footprint vs. compliance risk'}
+				</h3>
+				<p class="section-subtitle">
+					{vizMode === 'cost'
+						? 'The sourcing trade-off for your selling markets · bubble size = EU export share · click a country for detail'
+						: 'Bubble size = share of textile exports going to the EU · click a country for detail'}
+				</p>
+			</div>
+			<div class="viz-toggle">
+				<button class="viz-btn" class:active={vizMode === 'cost'} onclick={() => (vizMode = 'cost')}>
+					Cost
+				</button>
+				<button
+					class="viz-btn"
+					class:active={vizMode === 'footprint'}
+					onclick={() => (vizMode = 'footprint')}
+				>
+					Footprint
+				</button>
+			</div>
+		</div>
+		<RiskQuadrantChart data={enriched} mode={vizMode} onSelect={selectCountry} />
 	</div>
 
 	{#if selectedCountry}
 		<CountryDetailPanel
 			country={selectedCountry}
 			all={countries}
+			markets={selectedMarkets}
 			sources={data.dataset.sources}
 			onClose={() => (selectedIso3 = null)}
 		/>
@@ -88,16 +117,17 @@
 	<div class="viz-container card">
 		<h3 class="section-title">Compliance risk ranking</h3>
 		<p class="section-subtitle">
-			CSRD, EPR and CBAM exposure, Digital Product Passport gap, and forced-labor regulation risk
+			Scored for your selling markets — CSRD, EPR, CBAM and DPP where you sell into the EU; UFLPA
+			and traceability where you sell into North America
 		</p>
-		<ComplianceRankingChart data={filtered} onSelect={selectCountry} />
+		<ComplianceRankingChart data={enriched} onSelect={selectCountry} />
 	</div>
 
 	<RegTimeline />
 
-	<FootprintCheck {countries} />
+	<FootprintCheck {countries} initialMarkets={selectedMarkets} />
 
-	<SustainabilityTable countries={filtered} {selectedIso3} onSelect={selectCountry} />
+	<SustainabilityTable countries={enriched} {selectedIso3} onSelect={selectCountry} />
 
 	<CtaBand />
 
@@ -136,6 +166,42 @@
 		border-radius: var(--radius-xl);
 	}
 
+	.viz-header {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: var(--space-4);
+	}
+
+	.viz-toggle {
+		display: flex;
+		border: 1px solid var(--border-default);
+		border-radius: var(--radius-md);
+		overflow: hidden;
+		flex-shrink: 0;
+	}
+
+	.viz-btn {
+		padding: var(--space-1) var(--space-3);
+		border: none;
+		background: var(--bg-secondary);
+		color: var(--text-secondary);
+		font-size: var(--text-xs);
+		font-weight: 600;
+		font-family: var(--font-body);
+		cursor: pointer;
+		transition: all var(--transition-fast);
+	}
+
+	.viz-btn:not(:last-child) {
+		border-right: 1px solid var(--border-default);
+	}
+
+	.viz-btn.active {
+		background: var(--eco-primary);
+		color: white;
+	}
+
 	.section-title {
 		font-size: var(--text-base);
 		font-weight: 600;
@@ -161,6 +227,10 @@
 
 		.viz-container {
 			padding: var(--space-2);
+		}
+
+		.viz-header {
+			flex-direction: column;
 		}
 	}
 </style>

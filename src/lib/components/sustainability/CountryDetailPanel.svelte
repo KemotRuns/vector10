@@ -1,16 +1,34 @@
 <script lang="ts">
-	import type { CountrySustainability, SourceCitation, RegulationKey, ExposureTier } from '$lib/types/sustainability';
-	import { TIER_COLORS, TIER_LABELS, REGULATION_LABELS, REGULATION_NAMES } from '$lib/types/sustainability';
+	import type {
+		CountrySustainability,
+		SourceCitation,
+		RegulationKey,
+		ExposureTier,
+		MarketKey
+	} from '$lib/types/sustainability';
+	import {
+		TIER_COLORS,
+		TIER_LABELS,
+		REGULATION_LABELS,
+		REGULATION_NAMES,
+		MARKET_LABELS,
+		TARIFF_LABELS,
+		LEAD_LABELS
+	} from '$lib/types/sustainability';
+	import { riskForMarket, blendedCost } from '$lib/utils/marketRisk';
 	import { buildLetsTalkHref } from '$lib/utils/mailto';
 
 	interface Props {
 		country: CountrySustainability;
 		all: CountrySustainability[];
+		markets: MarketKey[];
 		sources: Record<string, SourceCitation>;
 		onClose: () => void;
 	}
 
-	let { country, all, sources, onClose }: Props = $props();
+	let { country, all, markets, sources, onClose }: Props = $props();
+
+	const ALL_MARKETS: MarketKey[] = ['eu', 'us', 'asia', 'row'];
 
 	const median = (values: number[]): number => {
 		const sorted = [...values].sort((a, b) => a - b);
@@ -65,7 +83,8 @@
 			key: 'dpp',
 			tier: country.dppReadiness >= 60 ? 'low' : country.dppReadiness >= 35 ? 'medium' : 'high',
 			detail: `readiness ${country.dppReadiness}/100`
-		}
+		},
+		{ key: 'uflpa', tier: country.uflpaExposure, detail: 'US forced-labor import ban risk' }
 	]);
 
 	let citations = $derived(country.sourceIds.map((id) => sources[id]).filter(Boolean));
@@ -128,6 +147,28 @@
 			<div class="scores">
 				<span>Footprint score <strong>{country.footprintScore}</strong>/100</span>
 				<span>Compliance risk <strong>{country.complianceRiskScore}</strong>/100</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="detail-extras">
+		<div>
+			<h4 class="block-title">Cost profile</h4>
+			<div class="facts">
+				<span class="fact"><strong>${country.laborCostUsd.toLocaleString()}</strong>/mo labor</span>
+				<span class="fact">EU: <strong>{TARIFF_LABELS[country.tariffEu]}</strong> · {LEAD_LABELS[country.leadEu]}</span>
+				<span class="fact">US: <strong>{TARIFF_LABELS[country.tariffUs]}</strong> · {LEAD_LABELS[country.leadUs]}</span>
+				<span class="fact">Cost index (your markets): <strong>{blendedCost(country, markets)}</strong>/100</span>
+			</div>
+		</div>
+		<div>
+			<h4 class="block-title">Compliance risk by selling market</h4>
+			<div class="facts">
+				{#each ALL_MARKETS as m (m)}
+					<span class="fact" class:active-market={markets.includes(m)}>
+						{MARKET_LABELS[m]}: <strong>{riskForMarket(country, m)}</strong>/100
+					</span>
+				{/each}
 			</div>
 		</div>
 	</div>
@@ -305,6 +346,43 @@
 		color: var(--eco-secondary);
 	}
 
+	.detail-extras {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: var(--space-6);
+		margin-top: var(--space-4);
+		padding-top: var(--space-3);
+		border-top: 1px solid var(--border-subtle);
+	}
+
+	.facts {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2) var(--space-4);
+	}
+
+	.fact {
+		font-size: var(--text-xs);
+		color: var(--text-tertiary);
+	}
+
+	.fact strong {
+		color: var(--text-primary);
+		font-family: var(--font-mono);
+	}
+
+	.fact.active-market {
+		color: var(--text-secondary);
+	}
+
+	.fact.active-market strong {
+		color: var(--eco-primary);
+	}
+
+	:global([data-theme='dark']) .fact.active-market strong {
+		color: var(--eco-secondary);
+	}
+
 	.detail-footer {
 		display: flex;
 		justify-content: space-between;
@@ -337,7 +415,8 @@
 	}
 
 	@media (max-width: 768px) {
-		.detail-grid {
+		.detail-grid,
+		.detail-extras {
 			grid-template-columns: 1fr;
 		}
 

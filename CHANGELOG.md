@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New "Sourcing Compliance & Footprint" module at `/sustainability-proposal` — an
   unlisted, noindexed page for team review; the existing `/sustainability` dashboard
   is unchanged until the proposal is approved (then it replaces it)
+- Market-aware risk and cost dimension on the proposal page: "Where do you sell?"
+  selector (EU & UK / North America / Japan & Korea / Rest of world) makes compliance
+  risk market-conditional (UFLPA-driven for the US, CSRD/EPR/CBAM/DPP for the EU);
+  new sourcing cost index (ILO labor cost + tariff preference + lead time) with a
+  cost-vs-risk quadrant as the headline chart, cost profile and per-market risk in
+  the country detail panel, and a selling-markets step in the footprint check
   - Expanded from 20 to 43 countries (now includes Taiwan, Japan, Uzbekistan, and 20 more)
   - New metrics: grid carbon intensity, low-carbon electricity share, WRI water stress,
     ITUC labor risk, EU export share, plus Vector10-assessed regulatory exposure tiers

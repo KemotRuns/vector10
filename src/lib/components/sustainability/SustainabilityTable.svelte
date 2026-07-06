@@ -1,20 +1,21 @@
 <script lang="ts">
-	import type { CountrySustainability, ExposureTier } from '$lib/types/sustainability';
+	import type { ExposureTier } from '$lib/types/sustainability';
 	import { REGION_COLORS, TIER_COLORS, TIER_LABELS } from '$lib/types/sustainability';
+	import type { MarketView } from '$lib/utils/marketRisk';
 
 	interface Props {
-		countries: CountrySustainability[];
+		countries: MarketView[];
 		selectedIso3: string | null;
 		onSelect: (iso3: string) => void;
 	}
 
 	let { countries, selectedIso3, onSelect }: Props = $props();
 
-	type SortKey = 'carbon' | 'water' | 'grid' | 'lowCarbon' | 'dpp' | 'risk' | 'footprint';
+	type SortKey = 'carbon' | 'water' | 'grid' | 'lowCarbon' | 'dpp' | 'wage' | 'cost' | 'risk' | 'footprint';
 	let sortBy = $state<SortKey>('risk');
 	let sortAsc = $state(false);
 
-	const keyValue = (c: CountrySustainability, key: SortKey): number => {
+	const keyValue = (c: MarketView, key: SortKey): number => {
 		switch (key) {
 			case 'carbon':
 				return c.carbonPerTon;
@@ -26,10 +27,14 @@
 				return c.lowCarbonShare;
 			case 'dpp':
 				return c.dppReadiness;
+			case 'wage':
+				return c.laborCostUsd;
+			case 'cost':
+				return c.costIndex;
 			case 'footprint':
 				return c.footprintScore;
 			default:
-				return c.complianceRiskScore;
+				return c.marketRisk;
 		}
 	};
 
@@ -64,6 +69,7 @@
 
 <div class="table-card card">
 	<h3 class="section-title">All countries — click a row for detail, headers to sort</h3>
+	<p class="table-note">Cost and Risk columns reflect your selected selling markets</p>
 	<div class="table-scroll">
 		<table class="data-table">
 			<thead>
@@ -78,8 +84,11 @@
 					<th class="hide-mobile">CBAM</th>
 					<th class="hide-mobile">CSRD</th>
 					<th class="hide-mobile">EPR</th>
+					<th class="hide-mobile">UFLPA</th>
 					<th class="th-right sortable hide-mobile" onclick={() => toggleSort('dpp')}>DPP{sortIndicator('dpp')}</th>
-					<th class="th-right sortable" onclick={() => toggleSort('footprint')}>Footprint{sortIndicator('footprint')}</th>
+					<th class="th-right sortable hide-mobile" onclick={() => toggleSort('wage')}>Wage $/mo{sortIndicator('wage')}</th>
+					<th class="th-right sortable" onclick={() => toggleSort('cost')}>Cost{sortIndicator('cost')}</th>
+					<th class="th-right sortable hide-mobile" onclick={() => toggleSort('footprint')}>Footprint{sortIndicator('footprint')}</th>
 					<th class="th-right sortable" onclick={() => toggleSort('risk')}>Risk{sortIndicator('risk')}</th>
 				</tr>
 			</thead>
@@ -107,9 +116,12 @@
 						<td class="hide-mobile">{@render tierChip(country.cbamExposure)}</td>
 						<td class="hide-mobile">{@render tierChip(country.csrdExposure)}</td>
 						<td class="hide-mobile">{@render tierChip(country.eprExposure)}</td>
+						<td class="hide-mobile">{@render tierChip(country.uflpaExposure)}</td>
 						<td class="value hide-mobile">{country.dppReadiness}</td>
-						<td class="value">{country.footprintScore}</td>
-						<td class="value risk-score">{country.complianceRiskScore}</td>
+						<td class="value hide-mobile">{country.laborCostUsd.toLocaleString()}</td>
+						<td class="value">{country.costIndex}</td>
+						<td class="value hide-mobile">{country.footprintScore}</td>
+						<td class="value risk-score">{country.marketRisk}</td>
 					</tr>
 				{/each}
 			</tbody>
@@ -131,6 +143,13 @@
 
 	:global([data-theme='dark']) .section-title {
 		color: var(--eco-secondary);
+	}
+
+	.table-note {
+		font-size: var(--text-xs);
+		color: var(--text-tertiary);
+		font-family: var(--font-mono);
+		margin-bottom: var(--space-3);
 	}
 
 	.table-scroll {

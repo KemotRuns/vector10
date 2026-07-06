@@ -3,11 +3,11 @@
 	import { isDark } from '$lib/stores/theme';
 	import { get } from 'svelte/store';
 	import type { EChartsType } from 'echarts/core';
-	import type { CountrySustainability } from '$lib/types/sustainability';
 	import { TIER_COLORS } from '$lib/types/sustainability';
+	import type { MarketView } from '$lib/utils/marketRisk';
 
 	interface Props {
-		data: CountrySustainability[];
+		data: MarketView[];
 		onSelect?: (iso3: string) => void;
 	}
 
@@ -17,7 +17,7 @@
 	let chart = $state<EChartsType | null>(null);
 
 	// Category axis renders bottom-up, so ascending sort puts highest risk on top
-	const sorted = $derived([...data].sort((a, b) => a.complianceRiskScore - b.complianceRiskScore));
+	const sorted = $derived([...data].sort((a, b) => a.marketRisk - b.marketRisk));
 	const chartHeight = $derived(`${Math.max(320, sorted.length * 24 + 90)}px`);
 
 	const riskColor = (score: number): string =>
@@ -34,7 +34,7 @@
 				tooltip: {
 					trigger: 'item',
 					formatter: (params: { name: string; value: number }) =>
-						`<b>${params.name}</b><br/>Compliance risk: <b>${params.value}</b>/100<br/><i>Click for country detail</i>`
+						`<b>${params.name}</b><br/>Compliance risk: <b>${params.value}</b>/100 (your markets)<br/><i>Click for country detail</i>`
 				},
 				grid: { left: 110, right: 48, top: 16, bottom: 32 },
 				xAxis: {
@@ -54,8 +54,8 @@
 					{
 						type: 'bar' as const,
 						data: sorted.map((d) => ({
-							value: d.complianceRiskScore,
-							itemStyle: { color: riskColor(d.complianceRiskScore), borderRadius: [0, 3, 3, 0] }
+							value: d.marketRisk,
+							itemStyle: { color: riskColor(d.marketRisk), borderRadius: [0, 3, 3, 0] }
 						})),
 						barMaxWidth: 14,
 						label: {
@@ -103,7 +103,7 @@
 	});
 
 	$effect(() => {
-		void sorted.length;
+		void sorted;
 		void $isDark;
 		if (chart) {
 			updateChart();

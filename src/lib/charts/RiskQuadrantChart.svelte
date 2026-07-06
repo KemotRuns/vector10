@@ -3,21 +3,38 @@
 	import { isDark } from '$lib/stores/theme';
 	import { get } from 'svelte/store';
 	import type { EChartsType } from 'echarts/core';
-	import type { CountrySustainability, ProducerRegion } from '$lib/types/sustainability';
+	import type { ProducerRegion } from '$lib/types/sustainability';
 	import { REGION_COLORS } from '$lib/types/sustainability';
+	import type { MarketView } from '$lib/utils/marketRisk';
 
 	interface Props {
-		data: CountrySustainability[];
+		data: MarketView[];
+		mode?: 'footprint' | 'cost';
 		onSelect?: (iso3: string) => void;
 		height?: string;
 	}
 
-	let { data, onSelect, height = '520px' }: Props = $props();
+	let { data, mode = 'footprint', onSelect, height = '520px' }: Props = $props();
 
 	let container: HTMLDivElement;
 	let chart = $state<EChartsType | null>(null);
 
-	type Datum = [number, number, number, string, string]; // footprint, risk, euShare, country, iso3
+	type Datum = [number, number, number, string, string]; // x, risk, euShare, country, iso3
+
+	const MODE_CONFIG = {
+		footprint: {
+			xLabel: 'Footprint score (higher = cleaner) →',
+			xValue: (d: MarketView) => d.footprintScore,
+			xTooltip: (v: number) => `Footprint score: <b>${v}</b>/100 (higher = cleaner)`,
+			quadrants: ['HEAVY & EXPOSED', 'CLEAN BUT EXPOSED', 'HEAVY & SHELTERED', 'CLEAN & READY']
+		},
+		cost: {
+			xLabel: 'Sourcing cost index (higher = costlier) →',
+			xValue: (d: MarketView) => d.costIndex,
+			xTooltip: (v: number) => `Cost index: <b>${v}</b>/100 (labor + duty + lead time)`,
+			quadrants: ['CHEAP BUT EXPOSED', 'COSTLY & EXPOSED', 'SWEET SPOT', 'COSTLY & SHELTERED']
+		}
+	} as const;
 
 	const median = (values: number[]): number => {
 		const sorted = [...values].sort((a, b) => a - b);
@@ -31,9 +48,10 @@
 		const textColor = dark ? '#c8cdd4' : '#3a3a4e';
 		const mutedColor = dark ? '#8a90a0' : '#6b6b80';
 		const lineColor = dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+		const cfg = MODE_CONFIG[mode];
 
-		const medFootprint = median(data.map((d) => d.footprintScore));
-		const medRisk = median(data.map((d) => d.complianceRiskScore));
+		const medX = median(data.map(cfg.xValue));
+		const medRisk = median(data.map((d) => d.marketRisk));
 		const regions = [...new Set(data.map((d) => d.region))] as ProducerRegion[];
 
 		const series = regions.map((region, i) => ({
@@ -42,9 +60,9 @@
 			data: data
 				.filter((d) => d.region === region)
 				.map((d) => ({
-					value: [d.footprintScore, d.complianceRiskScore, d.euExportShare, d.country, d.iso3] as Datum,
+					value: [cfg.xValue(d), d.marketRisk, d.euExportShare, d.country, d.iso3] as Datum,
 					label: {
-						show: d.euExportShare >= 30 || d.complianceRiskScore >= 70,
+						show: d.euExportShare >= 30 || d.marketRisk >= 70,
 						formatter: d.country,
 						position: 'right' as const,
 						fontSize: 11,
@@ -62,7 +80,7 @@
 							symbol: 'none',
 							lineStyle: { type: 'dashed' as const, color: mutedColor, opacity: 0.6 },
 							label: { show: false },
-							data: [{ xAxis: medFootprint }, { yAxis: medRisk }]
+							data: [{ xAxis: medX }, { yAxis: medRisk }]
 						}
 					}
 				: {})
@@ -88,11 +106,11 @@
 				tooltip: {
 					trigger: 'item',
 					formatter: (params: { value: Datum }) => {
-						const [footprint, risk, euShare, country] = params.value;
+						const [x, risk, euShare, country] = params.value;
 						return (
 							`<b>${country}</b><br/>` +
-							`Footprint score: <b>${footprint}</b>/100 (higher = cleaner)<br/>` +
-							`Compliance risk: <b>${risk}</b>/100<br/>` +
+							`${cfg.xTooltip(x)}<br/>` +
+							`Compliance risk: <b>${risk}</b>/100 (your markets)<br/>` +
 							`EU export share: <b>${euShare}%</b><br/>` +
 							`<i>Click for country detail</i>`
 						);
@@ -101,13 +119,13 @@
 				legend: { data: regions, top: 8, textStyle: { color: textColor, fontSize: 12 } },
 				grid: { left: 60, right: 90, top: 64, bottom: 56 },
 				graphic: [
-					quadrantLabel('HEAVY & EXPOSED', '13%', '18%'),
-					quadrantLabel('CLEAN BUT EXPOSED', '72%', '18%'),
-					quadrantLabel('HEAVY & SHELTERED', '13%', '86%'),
-					quadrantLabel('CLEAN & READY', '76%', '86%')
+					quadrantLabel(cfg.quadrants[0], '13%', '18%'),
+					quadrantLabel(cfg.quadrants[1], '72%', '18%'),
+					quadrantLabel(cfg.quadrants[2], '13%', '86%'),
+					quadrantLabel(cfg.quadrants[3], '74%', '86%')
 				],
 				xAxis: {
-					name: 'Footprint score (higher = cleaner) →',
+					name: cfg.xLabel,
 					nameLocation: 'center' as const,
 					nameGap: 34,
 					nameTextStyle: { fontSize: 12, color: mutedColor },
@@ -172,7 +190,8 @@
 	});
 
 	$effect(() => {
-		void data.length;
+		void data;
+		void mode;
 		void $isDark;
 		if (chart) updateChart();
 	});

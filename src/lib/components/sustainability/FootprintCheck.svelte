@@ -1,16 +1,24 @@
 <script lang="ts">
-	import type { CountrySustainability } from '$lib/types/sustainability';
+	import type { CountrySustainability, MarketKey } from '$lib/types/sustainability';
+	import { MARKET_LABELS } from '$lib/types/sustainability';
 	import { PRODUCT_CATEGORIES, type ProductCategory } from '$lib/data/productCategories';
-	import { computeBenchmarks, estimateFootprint } from '$lib/utils/footprintCheck';
+	import { estimateFootprint } from '$lib/utils/footprintCheck';
 	import FootprintCheckResult from './FootprintCheckResult.svelte';
 
 	interface Props {
 		countries: CountrySustainability[];
+		/** Pre-seeded from the page-level market selector */
+		initialMarkets: MarketKey[];
 	}
 
-	let { countries }: Props = $props();
+	let { countries, initialMarkets }: Props = $props();
+
+	const ALL_MARKETS: MarketKey[] = ['eu', 'us', 'asia', 'row'];
 
 	let selectedIso3 = $state<string[]>([]);
+	// Deliberately a one-time seed: the tool's market choice is independent after first render
+	// svelte-ignore state_referenced_locally
+	let selectedMarkets = $state<MarketKey[]>([...initialMarkets]);
 	let categoryId = $state<string>('');
 	let query = $state('');
 
@@ -25,9 +33,10 @@
 	let category = $derived<ProductCategory | undefined>(
 		PRODUCT_CATEGORIES.find((c) => c.id === categoryId)
 	);
-	let benchmarks = $derived(computeBenchmarks(countries));
 	let estimate = $derived(
-		selected.length > 0 && category ? estimateFootprint(selected, category, benchmarks) : null
+		selected.length > 0 && category && selectedMarkets.length > 0
+			? estimateFootprint(selected, category, selectedMarkets, countries)
+			: null
 	);
 
 	function toggleCountry(iso3: string) {
@@ -35,14 +44,23 @@
 			? selectedIso3.filter((c) => c !== iso3)
 			: [...selectedIso3, iso3];
 	}
+
+	function toggleMarket(market: MarketKey) {
+		if (selectedMarkets.includes(market)) {
+			if (selectedMarkets.length === 1) return;
+			selectedMarkets = selectedMarkets.filter((m) => m !== market);
+		} else {
+			selectedMarkets = [...selectedMarkets, market];
+		}
+	}
 </script>
 
 <div class="check card">
 	<div class="check-header">
 		<h3 class="check-title">Where do you stand?</h3>
 		<p class="check-sub">
-			Pick your sourcing countries and product category for a directional footprint and compliance
-			profile — in 30 seconds, no email required.
+			Pick your sourcing countries, selling markets and product category for a directional
+			footprint, cost and compliance profile — in 30 seconds, no email required.
 		</p>
 	</div>
 
@@ -69,7 +87,22 @@
 	</div>
 
 	<div class="step">
-		<span class="step-label">2 · What do you make?</span>
+		<span class="step-label">2 · Where do you sell?</span>
+		<div class="category-btns">
+			{#each ALL_MARKETS as market (market)}
+				<button
+					class="chip market-chip"
+					class:selected={selectedMarkets.includes(market)}
+					onclick={() => toggleMarket(market)}
+				>
+					{MARKET_LABELS[market]}
+				</button>
+			{/each}
+		</div>
+	</div>
+
+	<div class="step">
+		<span class="step-label">3 · What do you make?</span>
 		<div class="category-btns">
 			{#each PRODUCT_CATEGORIES as cat (cat.id)}
 				<button
@@ -87,7 +120,7 @@
 	</div>
 
 	{#if estimate && category}
-		<FootprintCheckResult {estimate} {selected} {category} />
+		<FootprintCheckResult {estimate} {selected} {category} markets={selectedMarkets} />
 	{:else}
 		<p class="empty-hint">
 			{selected.length === 0
@@ -182,6 +215,16 @@
 		background: var(--eco-primary);
 		border-color: var(--eco-primary);
 		color: white;
+	}
+
+	.market-chip {
+		font-size: var(--text-sm);
+		padding: var(--space-2) var(--space-3);
+	}
+
+	.market-chip.selected {
+		background: var(--eco-accent);
+		border-color: var(--eco-accent);
 	}
 
 	.category-btns {

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { CountrySustainability } from '$lib/types/sustainability';
-	import { TIER_COLORS, TIER_LABELS, REGULATION_LABELS } from '$lib/types/sustainability';
+	import type { CountrySustainability, MarketKey } from '$lib/types/sustainability';
+	import { TIER_COLORS, TIER_LABELS, REGULATION_LABELS, MARKET_LABELS } from '$lib/types/sustainability';
 	import type { ProductCategory } from '$lib/data/productCategories';
 	import type { FootprintEstimate } from '$lib/utils/footprintCheck';
 	import { buildLetsTalkHref } from '$lib/utils/mailto';
@@ -9,9 +9,10 @@
 		estimate: FootprintEstimate;
 		selected: CountrySustainability[];
 		category: ProductCategory;
+		markets: MarketKey[];
 	}
 
-	let { estimate, selected, category }: Props = $props();
+	let { estimate, selected, category, markets }: Props = $props();
 
 	const pct = (v: number): string => (v >= 0 ? `+${v}%` : `${v}%`);
 
@@ -20,8 +21,11 @@
 			`Sustainability check: ${selected.map((c) => c.country).join(', ')} / ${category.label}`,
 			`Hi Vector10,\n\nWe ran the sourcing footprint check with:\n` +
 				`Countries: ${selected.map((c) => c.country).join(', ')}\n` +
+				`Selling markets: ${markets.map((m) => MARKET_LABELS[m]).join(', ')}\n` +
 				`Category: ${category.label}\n` +
-				`Result: ~${estimate.carbonPerTon.toLocaleString()} kg CO2e/ton (${pct(estimate.carbonVsCleanPct)} vs clean benchmark), compliance risk ${estimate.riskScore}/100 (${TIER_LABELS[estimate.riskTier]}).\n\n` +
+				`Result: ~${estimate.carbonPerTon.toLocaleString()} kg CO2e/ton (${pct(estimate.carbonVsCleanPct)} vs clean benchmark), ` +
+				`cost index ${estimate.costIndex}/100 (${pct(estimate.costVsMedianPct)} vs median), ` +
+				`compliance risk ${estimate.riskScore}/100 (${TIER_LABELS[estimate.riskTier]}).\n\n` +
 				`We'd like to discuss how to improve this.\n`
 		)
 	);
@@ -46,18 +50,33 @@
 			</span>
 		</div>
 		<div class="stat">
+			<span class="stat-label">Sourcing cost</span>
+			<span class="stat-value">{estimate.costIndex}</span>
+			<span class="stat-unit">/100 index · ~${estimate.avgLaborCostUsd.toLocaleString()}/mo labor</span>
+			<span class="stat-delta" class:bad={estimate.costVsMedianPct > 0}>
+				{pct(estimate.costVsMedianPct)} vs dataset median for your markets
+			</span>
+		</div>
+		<div class="stat">
 			<span class="stat-label">Compliance risk</span>
 			<span class="stat-value" style:color={TIER_COLORS[estimate.riskTier]}>{estimate.riskScore}</span>
-			<span class="stat-unit">/100 · {TIER_LABELS[estimate.riskTier]}</span>
+			<span class="stat-unit">/100 · {TIER_LABELS[estimate.riskTier]} · {markets.map((m) => MARKET_LABELS[m]).join(' + ')}</span>
 			<span class="stat-delta">biggest lever: {estimate.biggestLever.country}</span>
 		</div>
 	</div>
 
 	<div class="triggered">
 		<span class="triggered-label">Most triggered regulations for this mix:</span>
-		{#each estimate.topRegulations as reg (reg.key)}
-			<p class="reg-line"><strong>{REGULATION_LABELS[reg.key]}</strong> — {reg.reason}</p>
-		{/each}
+		{#if estimate.topRegulations.length > 0}
+			{#each estimate.topRegulations as reg (reg.key)}
+				<p class="reg-line"><strong>{REGULATION_LABELS[reg.key]}</strong> — {reg.reason}</p>
+			{/each}
+		{:else}
+			<p class="reg-line">
+				Little binding textile regulation in your selling markets today — but EU and US rules
+				increasingly set global buyer expectations, so this is a window to get ahead.
+			</p>
+		{/if}
 	</div>
 
 	<div class="result-footer">
@@ -77,7 +96,7 @@
 
 	.result-stats {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(4, 1fr);
 		gap: var(--space-4);
 		margin-bottom: var(--space-4);
 	}
@@ -178,7 +197,13 @@
 		opacity: 0.85;
 	}
 
-	@media (max-width: 768px) {
+	@media (max-width: 1000px) {
+		.result-stats {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (max-width: 640px) {
 		.result-stats {
 			grid-template-columns: 1fr;
 		}

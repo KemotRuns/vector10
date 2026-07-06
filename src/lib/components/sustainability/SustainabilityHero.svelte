@@ -28,9 +28,10 @@
 			Sourcing Compliance &amp; Footprint
 		</h1>
 		<p class="standfirst">
-			Where you source determines your compliance risk. CSRD reporting is live, textile EPR is
-			spreading across the EU, and Digital Product Passports are coming — here is how that maps
-			across {countryCount} sourcing countries.
+			Where you source — and where you sell — determines your compliance risk and your cost.
+			CSRD reporting is live, textile EPR is spreading across the EU, UFLPA is detaining shipments
+			at the US border, and Digital Product Passports are coming. Here is the cost–compliance
+			trade-off mapped across {countryCount} sourcing countries.
 		</p>
 	</div>
 	<a class="cta-btn" href={ctaHref}>Let's Talk</a>

@@ -41,6 +41,27 @@
 		"url": "https://www.waterfootprint.org/",
 		"kind": "public"
 	},
+	"ilo2025": {
+		"label": "Garment-sector labour cost estimates (monthly, USD)",
+		"publisher": "International Labour Organization",
+		"year": 2025,
+		"url": "https://ilostat.ilo.org/",
+		"kind": "public"
+	},
+	"tradepref2026": {
+		"label": "Tariff preference snapshot — EU & US FTAs, customs union, GSP/EBA programs (AGOA lapse 2025 reflected)",
+		"publisher": "European Commission / USTR / WTO",
+		"year": 2026,
+		"url": "https://www.wto.org/english/tratop_e/region_e/region_e.htm",
+		"kind": "public"
+	},
+	"v10-uflpa": {
+		"label": "UFLPA exposure assessment — Xinjiang-linked input risk in national supply chains",
+		"publisher": "Vector10",
+		"year": 2026,
+		"url": "https://www.vector10.com",
+		"kind": "vector10-assessment"
+	},
 	"v10-model": {
 		"label": "Textile footprint model — kg CO₂e/ton and L/kg modeled from grid intensity, fiber base and process-heat factors",
 		"publisher": "Vector10",

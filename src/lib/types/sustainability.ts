@@ -8,6 +8,34 @@ export type ProducerRegion =
 
 export type ExposureTier = 'low' | 'medium' | 'high';
 
+/** Selling markets the brand operates in — reshapes compliance risk and cost */
+export type MarketKey = 'eu' | 'us' | 'asia' | 'row';
+
+export const MARKET_LABELS: Record<MarketKey, string> = {
+	eu: 'EU & UK',
+	us: 'North America',
+	asia: 'Japan & Korea',
+	row: 'Rest of world'
+};
+
+/** Tariff treatment of the country's textiles entering a market */
+export type TariffStatus = 'free' | 'reduced' | 'mfn' | 'penalty';
+
+export const TARIFF_LABELS: Record<TariffStatus, string> = {
+	free: 'Duty-free',
+	reduced: 'Reduced duty',
+	mfn: 'Full MFN duty',
+	penalty: 'Penalty tariffs'
+};
+
+export type LeadTier = 'near' | 'mid' | 'far';
+
+export const LEAD_LABELS: Record<LeadTier, string> = {
+	near: 'Near-shore',
+	mid: 'Mid-distance',
+	far: 'Deep-sea'
+};
+
 export type MetricProvenance = 'public' | 'modeled' | 'vector10-assessment';
 
 export interface SourceCitation {
@@ -43,6 +71,20 @@ export interface CountrySustainability {
 	eprExposure: ExposureTier;
 	/** Digital Product Passport readiness, 0–100 (Vector10 assessment) */
 	dppReadiness: number;
+	/** Garment-sector labor cost, USD/month (ILO-derived) */
+	laborCostUsd: number;
+	/** Labor cost on a log-scaled 0–100 index across the dataset */
+	laborCostIndex: number;
+	/** Tariff treatment entering the EU27 */
+	tariffEu: TariffStatus;
+	/** Tariff treatment entering the US */
+	tariffUs: TariffStatus;
+	/** US UFLPA (forced-labor import ban) exposure — Vector10 assessment */
+	uflpaExposure: ExposureTier;
+	/** Shipping lead-time tier to the EU */
+	leadEu: LeadTier;
+	/** Shipping lead-time tier to the US */
+	leadUs: LeadTier;
 	/** 0–100, higher = cleaner footprint */
 	footprintScore: number;
 	/** 0–100, higher = more regulatory compliance risk */
@@ -80,20 +122,22 @@ export const REGION_COLORS: Record<ProducerRegion, string> = {
 };
 
 /** Regulation keys shown as chips in detail panel / table */
-export type RegulationKey = 'cbam' | 'csrd' | 'epr' | 'dpp';
+export type RegulationKey = 'cbam' | 'csrd' | 'epr' | 'dpp' | 'uflpa';
 
 export const REGULATION_LABELS: Record<RegulationKey, string> = {
 	cbam: 'CBAM',
 	csrd: 'CSRD',
 	epr: 'EPR',
-	dpp: 'DPP'
+	dpp: 'DPP',
+	uflpa: 'UFLPA'
 };
 
 export const REGULATION_NAMES: Record<RegulationKey, string> = {
-	cbam: 'Carbon Border Adjustment Mechanism',
-	csrd: 'Corporate Sustainability Reporting Directive',
-	epr: 'Extended Producer Responsibility (textiles)',
-	dpp: 'Digital Product Passport (ESPR)'
+	cbam: 'Carbon Border Adjustment Mechanism (EU)',
+	csrd: 'Corporate Sustainability Reporting Directive (EU)',
+	epr: 'Extended Producer Responsibility, textiles (EU)',
+	dpp: 'Digital Product Passport / ESPR (EU)',
+	uflpa: 'Uyghur Forced Labor Prevention Act (US)'
 };
 
 /** Which fields are hard public data, which are modeled, which are Vector10 judgment */
@@ -110,6 +154,13 @@ export const METRIC_PROVENANCE: Record<string, MetricProvenance> = {
 	csrdExposure: 'vector10-assessment',
 	eprExposure: 'vector10-assessment',
 	dppReadiness: 'vector10-assessment',
+	uflpaExposure: 'vector10-assessment',
+	laborCostUsd: 'public',
+	tariffEu: 'public',
+	tariffUs: 'public',
+	laborCostIndex: 'modeled',
+	leadEu: 'modeled',
+	leadUs: 'modeled',
 	footprintScore: 'modeled',
 	complianceRiskScore: 'modeled'
 };
