@@ -1,9 +1,9 @@
 import type { PageLoad } from './$types';
-import type { CountrySustainability } from '$lib/types/sustainability';
+import { parseSustainabilityDataset } from '$lib/data/sustainabilitySchema';
 
 export const load: PageLoad = async ({ fetch }) => {
 	const res = await fetch('/data/sustainability.json');
-	const countries: CountrySustainability[] = await res.json();
+	const dataset = parseSustainabilityDataset(await res.json());
 
-	return { countries };
+	return { dataset };
 };

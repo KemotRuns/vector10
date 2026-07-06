@@ -29,4 +29,6 @@ vite.config.ts.timestamp-*
 *.png
 
 # Raw source data (processed output committed instead)
-static/data/raw/
+static/data/raw/*
+# …except curated sustainability inputs — they are the hand-maintained source of truth
+!static/data/raw/sustainability/

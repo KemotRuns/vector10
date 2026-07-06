@@ -5,6 +5,25 @@ All notable changes to the Vector10 project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2026-07-06
+
+### Changed
+- Complete redo of the Sustainability dashboard as "Sourcing Compliance & Footprint"
+  - Expanded from 20 to 43 countries (now includes Taiwan, Japan, Uzbekistan, and 20 more)
+  - New metrics: grid carbon intensity, low-carbon electricity share, WRI water stress,
+    ITUC labor risk, EU export share, plus Vector10-assessed regulatory exposure tiers
+    (CBAM, CSRD, textile EPR) and Digital Product Passport readiness
+  - New composite scores: footprint score (higher = cleaner) and compliance risk score
+  - Risk quadrant scatter (footprint vs. compliance risk, bubble = EU export share)
+    and compliance risk ranking replace the heatmap and composite ranking charts
+  - Country detail panel with metrics vs. median, tier chips, citations, contextual CTA
+  - EU regulatory timeline (CSRD → EPR → ESPR/DPP)
+  - Interactive "Where do you stand?" footprint check: pick sourcing countries and
+    product category → directional footprint/risk estimate with prefilled Let's Talk CTA
+  - Reproducible data pipeline: curated cited CSVs in static/data/raw/sustainability/
+    built by scripts/build-sustainability-data.mjs, Zod-validated at load
+  - Nav renamed to "Sustainability & Compliance"
+
 ## [0.1.0] - 2026-03-21
 
 ### Added

@@ -1,0 +1,58 @@
+{
+	"ember2024": {
+		"label": "Yearly Electricity Data 2024 — grid carbon intensity & low-carbon share",
+		"publisher": "Ember",
+		"year": 2024,
+		"url": "https://ember-energy.org/data/yearly-electricity-data/",
+		"kind": "public"
+	},
+	"aqueduct40": {
+		"label": "Aqueduct 4.0 — baseline water stress",
+		"publisher": "World Resources Institute",
+		"year": 2023,
+		"url": "https://www.wri.org/aqueduct",
+		"kind": "public"
+	},
+	"ituc2025": {
+		"label": "Global Rights Index 2025 — workers' rights ratings",
+		"publisher": "International Trade Union Confederation",
+		"year": 2025,
+		"url": "https://www.ituc-csi.org/global-rights-index",
+		"kind": "public"
+	},
+	"fti2024": {
+		"label": "Fashion Transparency Index 2024",
+		"publisher": "Fashion Revolution",
+		"year": 2024,
+		"url": "https://www.fashionrevolution.org/about/transparency/",
+		"kind": "public"
+	},
+	"comtrade2024": {
+		"label": "UN Comtrade — textile export destinations (HS 50–63)",
+		"publisher": "United Nations",
+		"year": 2024,
+		"url": "https://comtradeplus.un.org/",
+		"kind": "public"
+	},
+	"wfn": {
+		"label": "Water footprint of cotton and textile production",
+		"publisher": "Water Footprint Network",
+		"year": 2017,
+		"url": "https://www.waterfootprint.org/",
+		"kind": "public"
+	},
+	"v10-model": {
+		"label": "Textile footprint model — kg CO₂e/ton and L/kg modeled from grid intensity, fiber base and process-heat factors",
+		"publisher": "Vector10",
+		"year": 2026,
+		"url": "https://www.vector10.com",
+		"kind": "vector10-assessment"
+	},
+	"v10-reg2026": {
+		"label": "Regulatory exposure assessment 2026 — CBAM, CSRD, EPR and Digital Product Passport readiness",
+		"publisher": "Vector10",
+		"year": 2026,
+		"url": "https://www.vector10.com",
+		"kind": "vector10-assessment"
+	}
+}

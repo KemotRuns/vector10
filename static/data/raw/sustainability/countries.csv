@@ -1,0 +1,44 @@
+iso3,name,region,fiberBase,euExportShare,notes,sourceIds
+CHN,China,East Asia,mixed,16,World's largest textile exporter across all HS 50-63 chapters,ember2024;aqueduct40;ituc2025;fti2024;comtrade2024;v10-model;v10-reg2026
+TWN,Taiwan,East Asia,synthetic,9,Global hub for functional and recycled synthetics; strong traceability tech,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+JPN,Japan,East Asia,synthetic,7,High-spec technical fibers and premium fabrics,ember2024;aqueduct40;ituc2025;fti2024;comtrade2024;v10-model;v10-reg2026
+KOR,South Korea,East Asia,synthetic,7,Synthetics and technical textiles; nuclear-heavy grid,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+IND,India,South & Central Asia,cotton,21,Cotton-dominant base; large integrated mills,ember2024;aqueduct40;ituc2025;fti2024;comtrade2024;v10-model;v10-reg2026
+BGD,Bangladesh,South & Central Asia,cotton,50,RMG powerhouse; roughly half of exports go to the EU,ember2024;aqueduct40;ituc2025;fti2024;comtrade2024;v10-model;v10-reg2026
+PAK,Pakistan,South & Central Asia,cotton,35,Cotton and denim heavy; severe water stress,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+LKA,Sri Lanka,South & Central Asia,mixed,28,Apparel-focused with strong compliance track record,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+UZB,Uzbekistan,South & Central Asia,cotton,14,Post-boycott cotton reformer; vertically integrating,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+VNM,Vietnam,Southeast Asia,mixed,14,Fast-growing apparel exporter; EVFTA links to EU market,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+IDN,Indonesia,Southeast Asia,mixed,10,Large viscose and polyester capacity; coal-heavy grid,ember2024;aqueduct40;ituc2025;fti2024;comtrade2024;v10-model;v10-reg2026
+KHM,Cambodia,Southeast Asia,mixed,33,Apparel assembly; EBA trade preferences with EU,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+MMR,Myanmar,Southeast Asia,mixed,38,Elevated due-diligence risk since 2021,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+THA,Thailand,Southeast Asia,mixed,9,Regional fabric and fiber hub,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+PHL,Philippines,Southeast Asia,mixed,8,Smaller apparel base; US-oriented,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+MYS,Malaysia,Southeast Asia,synthetic,9,Gloves and technical textiles; UFLPA scrutiny history,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+LAO,Laos,Southeast Asia,mixed,18,Small assembly base; hydro-dominant grid,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+TUR,Türkiye,Europe,cotton,55,EU customs union; major near-shoring hub for European brands,ember2024;aqueduct40;ituc2025;fti2024;comtrade2024;v10-model;v10-reg2026
+ITA,Italy,Europe,mixed,52,Premium wool and luxury supply chains,ember2024;aqueduct40;ituc2025;fti2024;comtrade2024;v10-model;v10-reg2026
+DEU,Germany,Europe,synthetic,58,Technical textiles leader; CSRD applies directly,ember2024;aqueduct40;ituc2025;fti2024;comtrade2024;v10-model;v10-reg2026
+FRA,France,Europe,mixed,55,Textile EPR pioneer via AGEC; near-zero-carbon grid,ember2024;aqueduct40;ituc2025;fti2024;comtrade2024;v10-model;v10-reg2026
+ESP,Spain,Europe,mixed,58,Fast-fashion HQ market; high water stress in south,ember2024;aqueduct40;ituc2025;fti2024;comtrade2024;v10-model;v10-reg2026
+PRT,Portugal,Europe,mixed,74,Near-shoring favourite; strong vertical knit base,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+POL,Poland,Europe,mixed,74,Growing near-shore capacity; coal-heavy grid,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+ROU,Romania,Europe,mixed,70,CMT and full-package apparel for EU brands,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+BGR,Bulgaria,Europe,mixed,68,Small-batch EU apparel production,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+GBR,United Kingdom,Europe,mixed,58,Outside EU27; UK CBAM planned for 2027,ember2024;aqueduct40;ituc2025;fti2024;comtrade2024;v10-model;v10-reg2026
+USA,United States,Americas,cotton,13,Cotton producer; California textile EPR signed 2024,ember2024;aqueduct40;ituc2025;fti2024;comtrade2024;v10-model;v10-reg2026
+MEX,Mexico,Americas,mixed,4,USMCA near-shoring for US brands,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+BRA,Brazil,Americas,cotton,9,Major cotton grower; hydro-dominant grid,ember2024;aqueduct40;ituc2025;fti2024;comtrade2024;v10-model;v10-reg2026
+GTM,Guatemala,Americas,mixed,3,CAFTA apparel assembly for US market,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+HND,Honduras,Americas,mixed,2,Knit apparel assembly for US market,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+SLV,El Salvador,Americas,mixed,2,Synthetic knits; geothermal-supported grid,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+PER,Peru,Americas,cotton,14,Pima cotton and alpaca specialties,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+COL,Colombia,Americas,mixed,7,Regional full-package supplier; hydro-heavy grid,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+EGY,Egypt,Africa & Middle East,cotton,38,Long-staple cotton heritage; extreme water stress,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+MAR,Morocco,Africa & Middle East,mixed,84,Fast-turn near-shoring for EU; overwhelmingly EU-bound,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+TUN,Tunisia,Africa & Middle East,mixed,86,Denim and workwear for EU brands,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+ETH,Ethiopia,Africa & Middle East,cotton,28,Industrial parks; near-zero-carbon hydro grid,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+KEN,Kenya,Africa & Middle East,cotton,9,AGOA-driven apparel; geothermal-rich grid,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+MDG,Madagascar,Africa & Middle East,mixed,58,EU-oriented apparel under EBA preferences,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+JOR,Jordan,Africa & Middle East,synthetic,4,QIZ/US-FTA apparel base; extreme water scarcity,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
+ZAF,South Africa,Africa & Middle East,mixed,18,Regional supplier; coal-dominated grid,ember2024;aqueduct40;ituc2025;comtrade2024;v10-model;v10-reg2026
